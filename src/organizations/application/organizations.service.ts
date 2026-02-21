@@ -8,4 +8,3 @@ export class OrganizationsService {
     return new OrganizationId('generated-id');
   }
 }
-s
