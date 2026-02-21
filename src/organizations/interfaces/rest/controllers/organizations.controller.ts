@@ -3,11 +3,15 @@ import { CreateOrganizationRequest } from '../requests/create-organization.reque
 import { OrganizationCommandAssembler } from '../assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
+import { OrganizationsService } from 'src/organizations/application/organizations.service';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
 export class OrganizationsController {
-  constructor(private userContext: UserContext) {}
+  constructor(
+    private userContext: UserContext,
+    private organizationService: OrganizationsService,
+  ) {}
 
   @Get()
   findAll(): Array<string> {
@@ -17,10 +21,14 @@ export class OrganizationsController {
   @Post()
   createOrganization(@Body() body: CreateOrganizationRequest) {
     const user = this.userContext.user;
+
     const command = OrganizationCommandAssembler.toCreateOrganizationCommand(
       body,
       user,
     );
+
+    const organizationId = this.organizationService.createOrganization(command);
+
     return `Creating ${command.name.value} ${command.visibility}`;
   }
 }
