@@ -1,19 +1,25 @@
-import z from 'zod';
-import { createZodDto } from 'nestjs-zod';
+import { StringLengthException } from 'src/shared/domain/exceptions/string-length.exception';
 
-enum OrganizationNameConstrains {
-  MIN_LENGTH = 3,
-  MAX_LENGTH = 100,
-}
+export class OrganizationName {
+  public static MIN_LENGTH = 3;
+  public static MAX_LENGTH = 100;
 
-const organizationNameSchema = z.object({
-  value: z
-    .string()
-    .min(OrganizationNameConstrains.MIN_LENGTH)
-    .max(OrganizationNameConstrains.MAX_LENGTH),
-});
+  private constructor(private readonly value: string) {}
 
-export class OrganizationName extends createZodDto(organizationNameSchema) {
-  public static MIN_LENGTH = OrganizationNameConstrains.MIN_LENGTH;
-  public static MAX_LENGTH = OrganizationNameConstrains.MAX_LENGTH;
+  public static fromString(value: string) {
+    if (value.length < this.MIN_LENGTH || value.length > this.MAX_LENGTH) {
+      throw new StringLengthException(
+        value,
+        this.MIN_LENGTH,
+        this.MAX_LENGTH,
+        OrganizationName.name,
+      );
+    }
+
+    return new OrganizationName(value);
+  }
+
+  public toString(): string {
+    return this.value;
+  }
 }

@@ -1,12 +1,23 @@
-import { createZodDto } from 'nestjs-zod';
-import z, { uuid } from 'zod';
+import { StringPatternMismatchException } from 'src/shared/domain/exceptions/string-pattern-mismatch.exception';
+import z from 'zod';
 
-const organizationIdSchema = z.object({
-  value: z.uuid(),
-});
+export class OrganizationId {
+  private constructor(private readonly value: string) {}
 
-export class OrganizationId extends createZodDto(organizationIdSchema) {
   public static generate() {
-    return OrganizationId.schema.parse({ value: crypto.randomUUID() });
+    return new OrganizationId(crypto.randomUUID());
+  }
+
+  public static fromString(value: string) {
+    if (!z.uuid().safeParse(value).success) {
+      throw new StringPatternMismatchException(
+        `OrganizationId must be a valid UUID. Received: ${value}`,
+      );
+    }
+    return new OrganizationId(value);
+  }
+
+  public toString(): string {
+    return this.value;
   }
 }

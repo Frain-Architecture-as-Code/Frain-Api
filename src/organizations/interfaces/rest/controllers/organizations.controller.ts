@@ -4,6 +4,7 @@ import { OrganizationCommandAssembler } from '../assemblers/organization-command
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
 import { OrganizationsService } from 'src/organizations/application/organizations.service';
+import { OrganizationAssembler } from '../assemblers/organization.assembler';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
@@ -19,7 +20,7 @@ export class OrganizationsController {
   }
 
   @Post()
-  createOrganization(@Body() body: CreateOrganizationRequest) {
+  async createOrganization(@Body() body: CreateOrganizationRequest) {
     const user = this.userContext.user;
 
     const command = OrganizationCommandAssembler.toCreateOrganizationCommand(
@@ -27,8 +28,11 @@ export class OrganizationsController {
       user,
     );
 
-    const organizationId = this.organizationService.createOrganization(command);
+    const organizationId =
+      await this.organizationService.createOrganization(command);
 
-    return `Creating ${command.name.value} ${command.visibility}`;
+    const organization = await this.organizationService.getById(organizationId);
+
+    return OrganizationAssembler.toResponseFromEntity(organization);
   }
 }

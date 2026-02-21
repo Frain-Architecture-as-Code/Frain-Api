@@ -31,4 +31,8 @@ export class OrganizationsService {
 
     return organizationId;
   }
+
+  async getById(id: OrganizationId): Promise<Organization> {
+    return this.usersRepository.findOneOrFail({ where: { id } });
+  }
 }

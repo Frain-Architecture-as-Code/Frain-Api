@@ -5,27 +5,27 @@ import { ValueTransformer } from 'typeorm';
 
 export const organizationIdTransformer: ValueTransformer = {
   to(value: OrganizationId): string {
-    return value.value.toString();
+    return value.toString();
   },
   from(value: string): OrganizationId {
-    return OrganizationId.schema.parse(value);
+    return OrganizationId.fromString(value);
   },
 };
 
 export const organizationNameTransformer: ValueTransformer = {
   to(value: OrganizationName): string {
-    return value.value.toString();
+    return value.toString();
   },
   from(value: string): OrganizationName {
-    return OrganizationName.schema.parse(value);
+    return OrganizationName.fromString(value);
   },
 };
 
 export const memberIdTransformer: ValueTransformer = {
   to(value: MemberId): string {
-    return value.value.toString();
+    return value.toString();
   },
   from(value: string): MemberId {
-    return OrganizationId.schema.parse(value);
+    return MemberId.fromString(value);
   },
 };

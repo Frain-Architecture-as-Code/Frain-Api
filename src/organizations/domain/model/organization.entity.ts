@@ -8,9 +8,10 @@ import {
 import { OrganizationName } from './valueobjects/organization-name';
 import { OrganizationVisibility } from './valueobjects/organization-visibility';
 import { MemberId } from './valueobjects/member-id';
+import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
 
 @Entity()
-export class Organization {
+export class Organization extends AuditableEntity {
   @PrimaryColumn({
     type: 'uuid',
     transformer: organizationIdTransformer,

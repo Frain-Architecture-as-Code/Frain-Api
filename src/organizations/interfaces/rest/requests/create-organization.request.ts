@@ -3,7 +3,7 @@ import { OrganizationVisibility } from 'src/organizations/domain/model/valueobje
 import z from 'zod';
 
 const createOrganizationRequestSchema = z.object({
-  name: z.string().min(2).max(100),
+  name: z.string(),
   visibility: z.enum(OrganizationVisibility),
 });
 
