@@ -3,9 +3,11 @@ import { OrganizationsController } from './interfaces/rest/controllers/organizat
 import { OrganizationsService } from './application/organizations.service';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { SharedModule } from 'src/shared/shared.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Organization } from './domain/model/organization.entity';
 
 @Module({
-  imports: [SharedModule],
+  imports: [SharedModule, TypeOrmModule.forFeature([Organization])],
   controllers: [OrganizationsController],
   providers: [OrganizationsService, UserContext],
 })

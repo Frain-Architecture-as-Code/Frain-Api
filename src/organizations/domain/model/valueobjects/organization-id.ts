@@ -1,11 +1,12 @@
-export class OrganizationId {
-  constructor(private readonly value: string) {}
+import { createZodDto } from 'nestjs-zod';
+import z, { uuid } from 'zod';
 
-  static fromString(value: string): OrganizationId {
-    return new OrganizationId(value);
-  }
+const organizationIdSchema = z.object({
+  value: z.uuid(),
+});
 
-  toString(): string {
-    return this.value;
+export class OrganizationId extends createZodDto(organizationIdSchema) {
+  public static generate() {
+    return OrganizationId.schema.parse({ value: crypto.randomUUID() });
   }
 }
