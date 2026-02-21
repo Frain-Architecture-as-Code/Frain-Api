@@ -1,18 +1,24 @@
+import { InvalidOrganizationNameException } from '../../exceptions/invalid-organization-name.exception';
+
 export class OrganizationName {
   public static MIN_LENGTH = 3;
   public static MAX_LENGTH = 100;
 
-  constructor(public readonly value: string) {
+  private constructor(public readonly value: string) {
     if (!OrganizationName.isValid(value)) {
       throw new Error('Invalid organization name');
     }
   }
 
-  public static isValid(value: string): boolean {
-    return (
+  private static isValid(value: string): boolean {
+    if (
       value.length >= OrganizationName.MIN_LENGTH &&
       value.length <= OrganizationName.MAX_LENGTH
-    );
+    ) {
+      return true;
+    }
+
+    throw new InvalidOrganizationNameException(value);
   }
 
   public static fromString(value: string): OrganizationName {
