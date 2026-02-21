@@ -27,8 +27,10 @@ export class OrganizationsController {
     @Body() body: CreateOrganizationRequest,
   ) {
     const user = this.userContext.buildUser(request.user);
-    const command =
-      OrganizationCommandAssembler.toCreateOrganizationCommand(body);
+    const command = OrganizationCommandAssembler.toCreateOrganizationCommand(
+      body,
+      user,
+    );
     return `Creating ${body.name} + ${body.visibility}`;
   }
 }
