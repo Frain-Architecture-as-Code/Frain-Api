@@ -9,7 +9,7 @@ export class OrganizationCommandAssembler {
     user: User,
   ): CreateOrganizationCommand {
     return new CreateOrganizationCommand(
-      OrganizationName.fromString(request.name),
+      OrganizationName.schema.parse(request.name),
       request.visibility,
       user,
     );

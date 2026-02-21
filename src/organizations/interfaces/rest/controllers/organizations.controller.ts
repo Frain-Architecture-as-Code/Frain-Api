@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { CreateOrganizationRequest } from '../requests/create-organization.request';
 import { OrganizationCommandAssembler } from '../assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
@@ -22,15 +15,12 @@ export class OrganizationsController {
   }
 
   @Post()
-  createOrganization(
-    @Request() request: any,
-    @Body() body: CreateOrganizationRequest,
-  ) {
-    const user = this.userContext.buildUser(request.user);
+  createOrganization(@Body() body: CreateOrganizationRequest) {
+    const user = this.userContext.user;
     const command = OrganizationCommandAssembler.toCreateOrganizationCommand(
       body,
       user,
     );
-    return `Creating ${body.name} + ${body.visibility}`;
+    return `Creating ${command.name.value} ${command.visibility}`;
   }
 }

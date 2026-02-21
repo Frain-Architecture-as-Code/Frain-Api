@@ -1,27 +1,19 @@
-import { InvalidOrganizationNameException } from '../../exceptions/invalid-organization-name.exception';
+import z from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
-export class OrganizationName {
-  public static MIN_LENGTH = 3;
-  public static MAX_LENGTH = 100;
+enum OrganizationNameConstrains {
+  MIN_LENGTH = 3,
+  MAX_LENGTH = 100,
+}
 
-  private constructor(public readonly value: string) {
-    if (!OrganizationName.isValid(value)) {
-      throw new Error('Invalid organization name');
-    }
-  }
+const organizationNameSchema = z.object({
+  value: z
+    .string()
+    .min(OrganizationNameConstrains.MIN_LENGTH)
+    .max(OrganizationNameConstrains.MAX_LENGTH),
+});
 
-  private static isValid(value: string): boolean {
-    if (
-      value.length >= OrganizationName.MIN_LENGTH &&
-      value.length <= OrganizationName.MAX_LENGTH
-    ) {
-      return true;
-    }
-
-    throw new InvalidOrganizationNameException(value);
-  }
-
-  public static fromString(value: string): OrganizationName {
-    return new OrganizationName(value);
-  }
+export class OrganizationName extends createZodDto(organizationNameSchema) {
+  public static MIN_LENGTH = OrganizationNameConstrains.MIN_LENGTH;
+  public static MAX_LENGTH = OrganizationNameConstrains.MAX_LENGTH;
 }

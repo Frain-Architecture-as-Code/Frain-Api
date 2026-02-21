@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { AuthGuard } from './auth.guard';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { EmailAddress } from 'src/shared/domain/model/valueobjects/email-address';
 import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
 import { UserName } from 'src/shared/domain/model/valueobjects/user-name';
 import { User } from 'src/shared/domain/model/user';
 import { Picture } from 'src/shared/domain/model/valueobjects/picture';
+import { REQUEST } from '@nestjs/core';
 
 export interface JwtPayload {
   email: string;
@@ -15,16 +15,17 @@ export interface JwtPayload {
   exp: number;
 }
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class UserContext {
-  constructor(private authGuard: AuthGuard) {}
+  constructor(@Inject(REQUEST) private readonly request: Request) {}
 
-  buildUser(user: JwtPayload): User {
-    console.log(user);
-    const userId = UserId.fromString(user.sub);
-    const userEmail = EmailAddress.fromString(user.email);
-    const username = UserName.fromString(user.username);
-    const picture = Picture.fromString(user.picture);
+  get user(): User {
+    const payload = this.request['user'] as JwtPayload;
+
+    const userId = UserId.fromString(payload.sub);
+    const userEmail = EmailAddress.fromString(payload.email);
+    const username = UserName.fromString(payload.username);
+    const picture = Picture.fromString(payload.picture);
 
     return new User(userId, userEmail, picture, username);
   }
