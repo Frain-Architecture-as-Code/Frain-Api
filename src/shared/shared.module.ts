@@ -1,7 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UserContext } from './infrastructure/security/user-context';
+import { JwtModule } from '@nestjs/jwt';
+import { env } from 'src/env';
+import { AuthGuard } from './infrastructure/security/auth.guard';
 
 @Module({
-  providers: [UserContext],
+  imports: [
+    JwtModule.register({
+      global: true,
+      secret: env.jwtSecret,
+    }),
+  ],
+  providers: [AuthGuard],
+  exports: [AuthGuard],
 })
 export class SharedModule {}

@@ -11,7 +11,7 @@ export class EmailAddress {
     return emailSchema.safeParse(email).success;
   }
 
-  private static fromString(email: string) {
+  public static fromString(email: string) {
     if (!this.isValid(email)) {
       throw new StringPatternMismatchException(
         `Invalid Email Address: ${email}`,

@@ -12,7 +12,9 @@ export class UserId {
 
   public static fromString(value: string) {
     if (!this.isValid(value)) {
-      throw new StringPatternMismatchException('User Id is not a uuid');
+      throw new StringPatternMismatchException(
+        `User Id is not a uuid: ${value}`,
+      );
     }
 
     return new UserId(value);
