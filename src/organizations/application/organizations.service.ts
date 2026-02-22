@@ -53,8 +53,6 @@ export class OrganizationsService {
             ownerMemberId: memberId,
         });
 
-        console.log(command.currentUser.userId);
-
         const member = Member.create({
             memberId: memberId,
             userId: command.currentUser.userId,
@@ -120,8 +118,6 @@ export class OrganizationsService {
                 organizationId: command.organizationId,
             });
 
-        console.log('Requesting member');
-        console.log(requestingMember);
         if (!requestingMember.isOwner()) {
             throw new InsufficientPermissionException(
                 'Only the owner can update the organization',
