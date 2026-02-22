@@ -21,12 +21,16 @@ async function bootstrap() {
       .build(),
   );
 
-  SwaggerModule.setup('api', app, cleanupOpenApiDoc(openApiDoc));
+  SwaggerModule.setup('swagger', app, cleanupOpenApiDoc(openApiDoc));
 
   const logger = new Logger('Main');
-  logger.log('---- Application started ----');
-  logger.log('Swagger Docs: http://localhost:3000/api');
+  const port = process.env.PORT ?? 3000;
+  const host = process.env.HOST ?? 'localhost';
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(port);
+
+  logger.log(`---- Application started on ${protocol}://${host}:${port} ----`);
+  logger.log(`Swagger Docs: ${protocol}://${host}:${port}/swagger`);
 }
 bootstrap();
