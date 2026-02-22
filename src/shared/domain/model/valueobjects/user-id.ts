@@ -2,9 +2,7 @@ import z from 'zod';
 import { StringPatternMismatchException } from '../../exceptions/string-pattern-mismatch.exception';
 
 export class UserId {
-  private constructor(readonly value: string) {
-    this.value = value;
-  }
+  private constructor(private readonly value: string) {}
 
   public static isValid(value: string) {
     return z.uuid().safeParse(value).success;
@@ -18,5 +16,9 @@ export class UserId {
     }
 
     return new UserId(value);
+  }
+
+  public toString(): string {
+    return this.value;
   }
 }

@@ -1,0 +1,67 @@
+import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { MemberId } from './valueobjects/member-id';
+import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
+import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { OrganizationId } from './valueobjects/organization-id';
+import { MemberName } from './valueobjects/member-name';
+import { Picture } from 'src/shared/domain/model/valueobjects/picture';
+import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
+import { MemberRole } from './valueobjects/member-role';
+
+@Entity()
+export class Member extends AuditableEntity {
+  @PrimaryColumn({
+    type: 'uuid',
+    transformer: createValueObjectTransformer(MemberId),
+  })
+  id: MemberId;
+
+  @Column({
+    type: 'uuid',
+    transformer: createValueObjectTransformer(UserId),
+  })
+  userId: UserId;
+
+  @Column({
+    type: 'uuid',
+    transformer: createValueObjectTransformer(OrganizationId),
+  })
+  organizationId: OrganizationId;
+
+  @Column({
+    type: 'varchar',
+    transformer: createValueObjectTransformer(MemberName),
+  })
+  name: MemberName;
+
+  @Column({
+    type: 'varchar',
+    transformer: createValueObjectTransformer(Picture),
+  })
+  picture: Picture;
+
+  @Column({
+    type: 'enum',
+    enum: MemberRole,
+    default: MemberRole.CONTRIBUTOR,
+  })
+  role: MemberRole;
+
+  public static create(params: {
+    memberId: MemberId;
+    userId: UserId;
+    organizationId: OrganizationId;
+    name: MemberName;
+    picture: Picture;
+  }) {
+    const member = new Member();
+
+    member.id = params.memberId;
+    member.userId = params.userId;
+    member.name = params.name;
+    member.organizationId = params.organizationId;
+    member.picture = params.picture;
+
+    return member;
+  }
+}

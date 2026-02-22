@@ -1,20 +1,16 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { OrganizationId } from './valueobjects/organization-id';
-import {
-  memberIdTransformer,
-  organizationIdTransformer,
-  organizationNameTransformer,
-} from 'src/organizations/infrastructure/persistence/transformers/organization.transformer';
 import { OrganizationName } from './valueobjects/organization-name';
 import { OrganizationVisibility } from './valueobjects/organization-visibility';
 import { MemberId } from './valueobjects/member-id';
 import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
+import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
 
 @Entity()
 export class Organization extends AuditableEntity {
   @PrimaryColumn({
     type: 'uuid',
-    transformer: organizationIdTransformer,
+    transformer: createValueObjectTransformer(OrganizationId),
   })
   id: OrganizationId;
 
@@ -22,7 +18,7 @@ export class Organization extends AuditableEntity {
     type: 'varchar',
     length: 255,
     nullable: false,
-    transformer: organizationNameTransformer,
+    transformer: createValueObjectTransformer(OrganizationName),
   })
   name: OrganizationName;
 
@@ -36,7 +32,7 @@ export class Organization extends AuditableEntity {
   @Column({
     type: 'uuid',
     nullable: false,
-    transformer: memberIdTransformer,
+    transformer: createValueObjectTransformer(MemberId),
     name: 'owner_member_id',
   })
   ownerMemberId: MemberId;

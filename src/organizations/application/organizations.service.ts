@@ -5,12 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Organization } from '../domain/model/organization.entity';
 import { Repository } from 'typeorm';
 import { MemberId } from '../domain/model/valueobjects/member-id';
+import { GetOrganizationByIdQuery } from '../domain/model/queries/get-organization-by-id.query';
+import { Member } from '../domain/model/member.entity';
+import { MemberName } from '../domain/model/valueobjects/member-name';
 
 @Injectable()
 export class OrganizationsService {
   constructor(
     @InjectRepository(Organization)
-    private usersRepository: Repository<Organization>,
+    private organizationRepository: Repository<Organization>,
+
+    @InjectRepository(Member)
+    private memberRepository: Repository<Member>,
   ) {}
 
   async createOrganization(
@@ -25,14 +31,26 @@ export class OrganizationsService {
       visibility: command.visibility,
       ownerMemberId: memberId,
     });
-    // TODO: add member creation flow
 
-    await this.usersRepository.save(organization);
+    console.log(command.currentUser.userId);
+
+    const member = Member.create({
+      memberId: memberId,
+      userId: command.currentUser.userId,
+      organizationId: organizationId,
+      name: MemberName.fromString(command.currentUser.username.name),
+      picture: command.currentUser.picture,
+    });
+
+    await this.organizationRepository.save(organization);
+    await this.memberRepository.save(member);
 
     return organizationId;
   }
 
-  async getById(id: OrganizationId): Promise<Organization> {
-    return this.usersRepository.findOneOrFail({ where: { id } });
+  async getById(query: GetOrganizationByIdQuery): Promise<Organization> {
+    return this.organizationRepository.findOneOrFail({
+      where: { id: query.id },
+    });
   }
 }

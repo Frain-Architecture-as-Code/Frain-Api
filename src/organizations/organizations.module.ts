@@ -5,9 +5,10 @@ import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { SharedModule } from 'src/shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './domain/model/organization.entity';
+import { Member } from './domain/model/member.entity';
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([Organization])],
+  imports: [SharedModule, TypeOrmModule.forFeature([Organization, Member])],
   controllers: [OrganizationsController],
   providers: [OrganizationsService, UserContext],
 })

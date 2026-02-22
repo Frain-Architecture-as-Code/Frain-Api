@@ -16,4 +16,8 @@ export class Picture {
     }
     return new Picture(url);
   }
+
+  public toString(): string {
+    return this.url;
+  }
 }
