@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateOrganizationRequest } from './requests/create-organization.request';
 import { OrganizationCommandAssembler } from './assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
@@ -7,6 +15,7 @@ import { OrganizationsService } from 'src/organizations/application/organization
 import { OrganizationAssembler } from './assemblers/organization.assembler';
 import { OrganizationQueryAssembler } from './assemblers/organization-query.assembler';
 import { OrganizationResponse } from './responses/organization.response';
+import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
@@ -50,5 +59,21 @@ export class OrganizationsController {
     const organization = await this.organizationService.getById(query);
 
     return OrganizationAssembler.toResponseFromEntity(organization);
+  }
+
+  @Delete(':organizationId')
+  async deleteOrganization(
+    @Param('organizationId') id: string,
+  ): Promise<OrganizationId> {
+    const user = this.userContext.user;
+
+    const command = OrganizationCommandAssembler.toDeleteOrganizationCommand(
+      id,
+      user.userId,
+    );
+
+    const result = await this.organizationService.deleteOrganization(command);
+
+    return result;
   }
 }

@@ -9,6 +9,8 @@ import { GetOrganizationByIdQuery } from '../domain/model/queries/get-organizati
 import { Member } from '../domain/model/member.entity';
 import { MemberName } from '../domain/model/valueobjects/member-name';
 import { GetUserOrganizationsQuery } from '../domain/model/queries/get-user-organizations.query';
+import { DeleteOrganizationCommand } from '../domain/model/commands/delete-organization.command';
+import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
 
 @Injectable()
 export class OrganizationsService {
@@ -65,5 +67,29 @@ export class OrganizationsService {
     return this.organizationRepository.findOneOrFail({
       where: { id: query.id },
     });
+  }
+
+  async deleteOrganization(
+    command: DeleteOrganizationCommand,
+  ): Promise<OrganizationId> {
+    const currentMember = await this.memberRepository.findOneOrFail({
+      where: {
+        userId: command.userId,
+        organizationId: command.organizationId,
+      },
+    });
+
+    if (!currentMember.isOwner()) {
+      throw new InsufficientPermissionException(
+        'Only the owner can delete the organization',
+      );
+    }
+
+    await this.organizationRepository.manager.transaction(async (manager) => {
+      await manager.delete(Member, { organizationId: command.organizationId });
+      await manager.delete(Organization, { id: command.organizationId });
+    });
+
+    return command.organizationId;
   }
 }

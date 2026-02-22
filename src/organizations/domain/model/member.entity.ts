@@ -64,4 +64,8 @@ export class Member extends AuditableEntity {
 
     return member;
   }
+
+  public isOwner(): boolean {
+    return this.role === MemberRole.OWNER;
+  }
 }
