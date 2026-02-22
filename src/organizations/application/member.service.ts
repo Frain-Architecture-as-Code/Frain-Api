@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../domain/model/member.entity';
 import { GetMemberByUserIdAndOrganizationIdQuery } from '../domain/model/queries/get-member-by-user-id-and-organization-id.query';
-import { ExistsUserInOrganizationQuery } from '../domain/model/queries/exists-user-in-organization.query';
+import { UserIsNotMemberOfOrganizationException } from '../domain/exceptions/user-is-not-member-of-organization.exception';
 
 @Injectable()
 export class MemberService {
@@ -15,17 +15,6 @@ export class MemberService {
     async getMemberByUserIdAndOrganizationId(
         query: GetMemberByUserIdAndOrganizationIdQuery,
     ): Promise<Member> {
-        return await this.memberRepository.findOneOrFail({
-            where: {
-                userId: query.userId,
-                organizationId: query.organizationId,
-            },
-        });
-    }
-
-    async existsUserInOrganization(
-        query: ExistsUserInOrganizationQuery,
-    ): Promise<boolean> {
         const member = await this.memberRepository.findOne({
             where: {
                 userId: query.userId,
@@ -33,6 +22,13 @@ export class MemberService {
             },
         });
 
-        return !!member;
+        if (member === null) {
+            throw new UserIsNotMemberOfOrganizationException(
+                query.userId,
+                query.organizationId,
+            );
+        }
+
+        return member;
     }
 }

@@ -18,6 +18,8 @@ import { OrganizationQueryAssembler } from './assemblers/organization-query.asse
 import { OrganizationResponse } from './responses/organization.response';
 import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
 import { UpdateOrganizationRequest } from './requests/update-organization.request';
+import { MemberService } from 'src/organizations/application/member.service';
+import { MemberQueryAssembler } from './assemblers/member-query.assembler';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
@@ -25,6 +27,7 @@ export class OrganizationsController {
     constructor(
         private userContext: UserContext,
         private organizationService: OrganizationsService,
+        private memberService: MemberService,
     ) {}
 
     @Get()
@@ -56,10 +59,9 @@ export class OrganizationsController {
         const organizationId =
             await this.organizationService.createOrganization(command);
 
-        const query =
-            OrganizationQueryAssembler.toGetOrganizationByIdQuery(
-                organizationId,
-            );
+        const query = OrganizationQueryAssembler.toGetOrganizationByIdQuery(
+            organizationId.toString(),
+        );
 
         const organization = await this.organizationService.getById(query);
 
@@ -100,6 +102,26 @@ export class OrganizationsController {
 
         const organization =
             await this.organizationService.updateOrganization(command);
+
+        return OrganizationAssembler.toResponseFromEntity(organization);
+    }
+
+    @Get(':organizationId')
+    async getOrganizationById(
+        @Param('organizationId') id: string,
+    ): Promise<OrganizationResponse> {
+        const user = this.userContext.user;
+
+        await this.memberService.getMemberByUserIdAndOrganizationId(
+            MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
+                user.userId,
+                id,
+            ),
+        );
+
+        const query = OrganizationQueryAssembler.toGetOrganizationByIdQuery(id);
+
+        const organization = await this.organizationService.getById(query);
 
         return OrganizationAssembler.toResponseFromEntity(organization);
     }

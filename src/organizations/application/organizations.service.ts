@@ -14,7 +14,6 @@ import { InsufficientPermissionException } from 'src/shared/domain/exceptions/in
 import { UpdateOrganizationCommand } from '../domain/model/commands/update-organization.command';
 import { MemberService } from './member.service';
 import { OrganizationNotFoundException } from '../domain/exceptions/organization-not-found.exception';
-import { OrganizationVisibility } from '../domain/model/valueobjects/organization-visibility';
 
 @Injectable()
 export class OrganizationsService {
@@ -71,32 +70,14 @@ export class OrganizationsService {
 
     async getById(query: GetOrganizationByIdQuery): Promise<Organization> {
         const organization = await this.organizationRepository.findOne({
-            where: { id: query.id },
+            where: { id: query.organizationId },
         });
 
         if (organization === null) {
-            throw new OrganizationNotFoundException(query.id);
+            throw new OrganizationNotFoundException(query.organizationId);
         }
 
-        // PUBLIC organizations are accessible by everyone
-        if (organization.isPublic()) {
-            return organization;
-        }
-
-        // As the organization is PRIVATE, only members can access it
-        const existsUserInOrganization =
-            await this.memberService.existsUserInOrganization({
-                organizationId: query.id,
-                userId: query.userId,
-            });
-
-        if (existsUserInOrganization) {
-            return organization;
-        }
-
-        throw new InsufficientPermissionException(
-            `User is not a member of the organization '${organization.name.toString()}'`,
-        );
+        return organization;
     }
 
     async deleteOrganization(
@@ -144,8 +125,7 @@ export class OrganizationsService {
         }
 
         const organization = await this.getById({
-            id: command.organizationId,
-            userId: command.userId,
+            organizationId: command.organizationId,
         });
 
         const result = organization.update({
