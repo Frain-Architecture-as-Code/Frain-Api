@@ -10,62 +10,62 @@ import { MemberRole } from './valueobjects/member-role';
 
 @Entity()
 export class Member extends AuditableEntity {
-  @PrimaryColumn({
-    type: 'uuid',
-    transformer: createValueObjectTransformer(MemberId),
-  })
-  id: MemberId;
+    @PrimaryColumn({
+        type: 'uuid',
+        transformer: createValueObjectTransformer(MemberId),
+    })
+    id: MemberId;
 
-  @Column({
-    type: 'uuid',
-    transformer: createValueObjectTransformer(UserId),
-  })
-  userId: UserId;
-
-  @Column({
-    type: 'uuid',
-    transformer: createValueObjectTransformer(OrganizationId),
-  })
-  organizationId: OrganizationId;
-
-  @Column({
-    type: 'varchar',
-    transformer: createValueObjectTransformer(MemberName),
-  })
-  name: MemberName;
-
-  @Column({
-    type: 'varchar',
-    transformer: createValueObjectTransformer(Picture),
-  })
-  picture: Picture;
-
-  @Column({
-    type: 'enum',
-    enum: MemberRole,
-    default: MemberRole.CONTRIBUTOR,
-  })
-  role: MemberRole;
-
-  public static create(params: {
-    memberId: MemberId;
+    @Column({
+        type: 'uuid',
+        transformer: createValueObjectTransformer(UserId),
+    })
     userId: UserId;
+
+    @Column({
+        type: 'uuid',
+        transformer: createValueObjectTransformer(OrganizationId),
+    })
     organizationId: OrganizationId;
+
+    @Column({
+        type: 'varchar',
+        transformer: createValueObjectTransformer(MemberName),
+    })
     name: MemberName;
+
+    @Column({
+        type: 'varchar',
+        transformer: createValueObjectTransformer(Picture),
+    })
     picture: Picture;
-  }) {
-    const member = new Member();
 
-    member.id = params.memberId;
-    member.userId = params.userId;
-    member.name = params.name;
-    member.organizationId = params.organizationId;
-    member.picture = params.picture;
+    @Column({
+        type: 'enum',
+        enum: MemberRole,
+        default: MemberRole.CONTRIBUTOR,
+    })
+    role: MemberRole;
 
-    return member;
-  }
+    public static create(params: {
+        memberId: MemberId;
+        userId: UserId;
+        organizationId: OrganizationId;
+        name: MemberName;
+        picture: Picture;
+    }) {
+        const member = new Member();
 
-  public isOwner(): boolean {
-    return this.role === MemberRole.OWNER;
-  }
+        member.id = params.memberId;
+        member.userId = params.userId;
+        member.name = params.name;
+        member.organizationId = params.organizationId;
+        member.picture = params.picture;
+
+        return member;
+    }
+
+    public isOwner(): boolean {
+        return this.role === MemberRole.OWNER;
+    }
 }

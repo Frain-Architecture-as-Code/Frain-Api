@@ -4,15 +4,15 @@ import { OrganizationId } from 'src/organizations/domain/model/valueobjects/orga
 import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
 
 export class OrganizationQueryAssembler {
-  static toGetOrganizationByIdQuery(
-    id: OrganizationId,
-  ): GetOrganizationByIdQuery {
-    return new GetOrganizationByIdQuery(id);
-  }
+    static toGetOrganizationByIdQuery(
+        id: OrganizationId,
+    ): GetOrganizationByIdQuery {
+        return new GetOrganizationByIdQuery(id);
+    }
 
-  static toGetUserOrganizationsQuery(
-    userId: UserId,
-  ): GetUserOrganizationsQuery {
-    return new GetUserOrganizationsQuery(userId);
-  }
+    static toGetUserOrganizationsQuery(
+        userId: UserId,
+    ): GetUserOrganizationsQuery {
+        return new GetUserOrganizationsQuery(userId);
+    }
 }

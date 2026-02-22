@@ -1,21 +1,21 @@
 import {
-  ZodValidationPipe,
-  ZodSerializerInterceptor,
-  ZodSerializationException,
+    ZodValidationPipe,
+    ZodSerializerInterceptor,
+    ZodSerializationException,
 } from 'nestjs-zod';
 import {
-  APP_PIPE,
-  APP_INTERCEPTOR,
-  APP_FILTER,
-  BaseExceptionFilter,
+    APP_PIPE,
+    APP_INTERCEPTOR,
+    APP_FILTER,
+    BaseExceptionFilter,
 } from '@nestjs/core';
 import { ZodError } from 'zod';
 import {
-  Module,
-  HttpException,
-  ArgumentsHost,
-  Logger,
-  Catch,
+    Module,
+    HttpException,
+    ArgumentsHost,
+    Logger,
+    Catch,
 } from '@nestjs/common';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { ProjectsModule } from './projects/projects.module';
@@ -28,58 +28,60 @@ import { Member } from './organizations/domain/model/member.entity';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
-  private logger = new Logger(HttpExceptionFilter.name);
+    private logger = new Logger(HttpExceptionFilter.name);
 
-  catch(exception: HttpException, host: ArgumentsHost) {
-    if (exception instanceof ZodSerializationException) {
-      const zodError = exception.getZodError();
+    catch(exception: HttpException, host: ArgumentsHost) {
+        if (exception instanceof ZodSerializationException) {
+            const zodError = exception.getZodError();
 
-      if (zodError instanceof ZodError) {
-        this.logger.error(`ZodSerializationException: ${zodError.message}`);
-      }
+            if (zodError instanceof ZodError) {
+                this.logger.error(
+                    `ZodSerializationException: ${zodError.message}`,
+                );
+            }
+        }
+
+        super.catch(exception, host);
     }
-
-    super.catch(exception, host);
-  }
 }
 
 @Module({
-  imports: [
-    OrganizationsModule,
-    ProjectsModule,
-    NotificationsModule,
-    SharedModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST'),
-        port: config.get<number>('DB_PORT'),
-        username: config.get<string>('DB_USER'),
-        password: config.get<string>('DB_PASSWORD'),
-        database: config.get<string>('DB_NAME'),
-        entities: [Organization, Member],
-        synchronize: true,
-      }),
-    }),
-  ],
-  controllers: [],
-  providers: [
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ZodSerializerInterceptor,
-    },
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-  ],
+    imports: [
+        OrganizationsModule,
+        ProjectsModule,
+        NotificationsModule,
+        SharedModule,
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        TypeOrmModule.forRootAsync({
+            inject: [ConfigService],
+            useFactory: (config: ConfigService) => ({
+                type: 'postgres',
+                host: config.get<string>('DB_HOST'),
+                port: config.get<number>('DB_PORT'),
+                username: config.get<string>('DB_USER'),
+                password: config.get<string>('DB_PASSWORD'),
+                database: config.get<string>('DB_NAME'),
+                entities: [Organization, Member],
+                synchronize: true,
+            }),
+        }),
+    ],
+    controllers: [],
+    providers: [
+        {
+            provide: APP_PIPE,
+            useClass: ZodValidationPipe,
+        },
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: ZodSerializerInterceptor,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: HttpExceptionFilter,
+        },
+    ],
 })
 export class AppModule {}

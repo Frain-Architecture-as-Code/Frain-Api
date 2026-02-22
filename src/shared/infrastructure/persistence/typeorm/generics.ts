@@ -1,7 +1,7 @@
 export interface StringValueObject {
-  toString(): string;
+    toString(): string;
 }
 
 export interface ValueObjectStatic<T extends StringValueObject> {
-  fromString(value: string): T;
+    fromString(value: string): T;
 }

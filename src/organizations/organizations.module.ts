@@ -6,10 +6,11 @@ import { SharedModule } from 'src/shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './domain/model/organization.entity';
 import { Member } from './domain/model/member.entity';
+import { MemberService } from './application/member.service';
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([Organization, Member])],
-  controllers: [OrganizationsController],
-  providers: [OrganizationsService, UserContext],
+    imports: [SharedModule, TypeOrmModule.forFeature([Organization, Member])],
+    controllers: [OrganizationsController],
+    providers: [OrganizationsService, UserContext, MemberService],
 })
 export class OrganizationsModule {}

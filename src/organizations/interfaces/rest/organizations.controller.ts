@@ -1,11 +1,12 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    UseGuards,
 } from '@nestjs/common';
 import { CreateOrganizationRequest } from './requests/create-organization.request';
 import { OrganizationCommandAssembler } from './assemblers/organization-command.assembler';
@@ -16,64 +17,90 @@ import { OrganizationAssembler } from './assemblers/organization.assembler';
 import { OrganizationQueryAssembler } from './assemblers/organization-query.assembler';
 import { OrganizationResponse } from './responses/organization.response';
 import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
+import { UpdateOrganizationRequest } from './requests/update-organization.request';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
 export class OrganizationsController {
-  constructor(
-    private userContext: UserContext,
-    private organizationService: OrganizationsService,
-  ) {}
+    constructor(
+        private userContext: UserContext,
+        private organizationService: OrganizationsService,
+    ) {}
 
-  @Get()
-  async getCurrentUserOrganizations(): Promise<OrganizationResponse[]> {
-    const user = this.userContext.user;
+    @Get()
+    async getCurrentUserOrganizations(): Promise<OrganizationResponse[]> {
+        const user = this.userContext.user;
 
-    const query = OrganizationQueryAssembler.toGetUserOrganizationsQuery(
-      user.userId,
-    );
+        const query = OrganizationQueryAssembler.toGetUserOrganizationsQuery(
+            user.userId,
+        );
 
-    const organizations =
-      await this.organizationService.getUserOrganizations(query);
+        const organizations =
+            await this.organizationService.getUserOrganizations(query);
 
-    return OrganizationAssembler.toResponseListFromEntities(organizations);
-  }
+        return OrganizationAssembler.toResponseListFromEntities(organizations);
+    }
 
-  @Post()
-  async createOrganization(
-    @Body() body: CreateOrganizationRequest,
-  ): Promise<OrganizationResponse> {
-    const user = this.userContext.user;
+    @Post()
+    async createOrganization(
+        @Body() body: CreateOrganizationRequest,
+    ): Promise<OrganizationResponse> {
+        const user = this.userContext.user;
 
-    const command = OrganizationCommandAssembler.toCreateOrganizationCommand(
-      body,
-      user,
-    );
+        const command =
+            OrganizationCommandAssembler.toCreateOrganizationCommand(
+                body,
+                user,
+            );
 
-    const organizationId =
-      await this.organizationService.createOrganization(command);
+        const organizationId =
+            await this.organizationService.createOrganization(command);
 
-    const query =
-      OrganizationQueryAssembler.toGetOrganizationByIdQuery(organizationId);
+        const query =
+            OrganizationQueryAssembler.toGetOrganizationByIdQuery(
+                organizationId,
+            );
 
-    const organization = await this.organizationService.getById(query);
+        const organization = await this.organizationService.getById(query);
 
-    return OrganizationAssembler.toResponseFromEntity(organization);
-  }
+        return OrganizationAssembler.toResponseFromEntity(organization);
+    }
 
-  @Delete(':organizationId')
-  async deleteOrganization(
-    @Param('organizationId') id: string,
-  ): Promise<OrganizationId> {
-    const user = this.userContext.user;
+    @Delete(':organizationId')
+    async deleteOrganization(
+        @Param('organizationId') id: string,
+    ): Promise<OrganizationId> {
+        const user = this.userContext.user;
 
-    const command = OrganizationCommandAssembler.toDeleteOrganizationCommand(
-      id,
-      user.userId,
-    );
+        const command =
+            OrganizationCommandAssembler.toDeleteOrganizationCommand(
+                id,
+                user.userId,
+            );
 
-    const result = await this.organizationService.deleteOrganization(command);
+        const result =
+            await this.organizationService.deleteOrganization(command);
 
-    return result;
-  }
+        return result;
+    }
+
+    @Patch()
+    async updateOrganization(
+        @Param('organizationId') id: string,
+        @Body() body: UpdateOrganizationRequest,
+    ): Promise<OrganizationResponse> {
+        const user = this.userContext.user;
+
+        const command =
+            OrganizationCommandAssembler.toUpdateOrganizationCommand(
+                id,
+                user,
+                body,
+            );
+
+        const organization =
+            await this.organizationService.updateOrganization(command);
+
+        return OrganizationAssembler.toResponseFromEntity(organization);
+    }
 }

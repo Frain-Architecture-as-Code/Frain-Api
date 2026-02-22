@@ -4,16 +4,16 @@ import { AuthGuard } from './infrastructure/security/auth.guard';
 import { ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        global: true,
-        secret: configService.get<string>('JWT_SECRET'),
-      }),
-    }),
-  ],
-  providers: [AuthGuard],
-  exports: [AuthGuard, JwtModule],
+    imports: [
+        JwtModule.registerAsync({
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => ({
+                global: true,
+                secret: configService.get<string>('JWT_SECRET'),
+            }),
+        }),
+    ],
+    providers: [AuthGuard],
+    exports: [AuthGuard, JwtModule],
 })
 export class SharedModule {}

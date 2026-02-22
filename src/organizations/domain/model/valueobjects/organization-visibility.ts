@@ -1,4 +1,4 @@
 export enum OrganizationVisibility {
-  PUBLIC = 'PUBLIC',
-  PRIVATE = 'PRIVATE',
+    PUBLIC = 'PUBLIC',
+    PRIVATE = 'PRIVATE',
 }

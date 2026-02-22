@@ -1,11 +1,13 @@
+import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { OrganizationId } from '../valueobjects/organization-id';
 import { OrganizationName } from '../valueobjects/organization-name';
 import { OrganizationVisibility } from '../valueobjects/organization-visibility';
-import { User } from 'src/shared/domain/model/user';
 
-export class CreateOrganizationCommand {
+export class UpdateOrganizationCommand {
     constructor(
+        public readonly organizationId: OrganizationId,
         public readonly name: OrganizationName,
         public readonly visibility: OrganizationVisibility,
-        public readonly currentUser: User,
+        public readonly userId: UserId,
     ) {}
 }
