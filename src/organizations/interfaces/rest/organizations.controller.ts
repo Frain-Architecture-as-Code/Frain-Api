@@ -68,25 +68,27 @@ export class OrganizationsController {
         return OrganizationAssembler.toResponseFromEntity(organization);
     }
 
-    @Delete(':organizationId')
-    async deleteOrganization(
+    @Get(':organizationId')
+    async getOrganizationById(
         @Param('organizationId') id: string,
-    ): Promise<OrganizationId> {
+    ): Promise<OrganizationResponse> {
         const user = this.userContext.user;
 
-        const command =
-            OrganizationCommandAssembler.toDeleteOrganizationCommand(
-                id,
+        await this.memberService.getMemberByUserIdAndOrganizationId(
+            MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
                 user.userId,
-            );
+                id,
+            ),
+        );
 
-        const result =
-            await this.organizationService.deleteOrganization(command);
+        const query = OrganizationQueryAssembler.toGetOrganizationByIdQuery(id);
 
-        return result;
+        const organization = await this.organizationService.getById(query);
+
+        return OrganizationAssembler.toResponseFromEntity(organization);
     }
 
-    @Patch()
+    @Patch(':organizationId')
     async updateOrganization(
         @Param('organizationId') id: string,
         @Body() body: UpdateOrganizationRequest,
@@ -106,23 +108,21 @@ export class OrganizationsController {
         return OrganizationAssembler.toResponseFromEntity(organization);
     }
 
-    @Get(':organizationId')
-    async getOrganizationById(
+    @Delete(':organizationId')
+    async deleteOrganization(
         @Param('organizationId') id: string,
-    ): Promise<OrganizationResponse> {
+    ): Promise<OrganizationId> {
         const user = this.userContext.user;
 
-        await this.memberService.getMemberByUserIdAndOrganizationId(
-            MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
-                user.userId,
+        const command =
+            OrganizationCommandAssembler.toDeleteOrganizationCommand(
                 id,
-            ),
-        );
+                user.userId,
+            );
 
-        const query = OrganizationQueryAssembler.toGetOrganizationByIdQuery(id);
+        const result =
+            await this.organizationService.deleteOrganization(command);
 
-        const organization = await this.organizationService.getById(query);
-
-        return OrganizationAssembler.toResponseFromEntity(organization);
+        return result;
     }
 }

@@ -53,6 +53,7 @@ export class Member extends AuditableEntity {
         organizationId: OrganizationId;
         name: MemberName;
         picture: Picture;
+        role: MemberRole;
     }) {
         const member = new Member();
 
@@ -61,6 +62,7 @@ export class Member extends AuditableEntity {
         member.name = params.name;
         member.organizationId = params.organizationId;
         member.picture = params.picture;
+        member.role = params.role;
 
         return member;
     }

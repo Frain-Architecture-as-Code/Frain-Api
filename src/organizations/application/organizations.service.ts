@@ -14,6 +14,7 @@ import { InsufficientPermissionException } from 'src/shared/domain/exceptions/in
 import { UpdateOrganizationCommand } from '../domain/model/commands/update-organization.command';
 import { MemberService } from './member.service';
 import { OrganizationNotFoundException } from '../domain/exceptions/organization-not-found.exception';
+import { MemberRole } from '../domain/model/valueobjects/member-role';
 
 @Injectable()
 export class OrganizationsService {
@@ -60,6 +61,7 @@ export class OrganizationsService {
             organizationId: organizationId,
             name: MemberName.fromString(command.currentUser.username.name),
             picture: command.currentUser.picture,
+            role: MemberRole.OWNER,
         });
 
         await this.organizationRepository.save(organization);
@@ -118,6 +120,8 @@ export class OrganizationsService {
                 organizationId: command.organizationId,
             });
 
+        console.log('Requesting member');
+        console.log(requestingMember);
         if (!requestingMember.isOwner()) {
             throw new InsufficientPermissionException(
                 'Only the owner can update the organization',
