@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { CreateOrganizationRequest } from '../requests/create-organization.request';
-import { OrganizationCommandAssembler } from '../assemblers/organization-command.assembler';
+import { CreateOrganizationRequest } from './requests/create-organization.request';
+import { OrganizationCommandAssembler } from './assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
 import { OrganizationsService } from 'src/organizations/application/organizations.service';
-import { OrganizationAssembler } from '../assemblers/organization.assembler';
-import { OrganizationQueryAssembler } from '../assemblers/organization-query.assembler';
-import { OrganizationResponse } from '../responses/organization.response';
+import { OrganizationAssembler } from './assemblers/organization.assembler';
+import { OrganizationQueryAssembler } from './assemblers/organization-query.assembler';
+import { OrganizationResponse } from './responses/organization.response';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
