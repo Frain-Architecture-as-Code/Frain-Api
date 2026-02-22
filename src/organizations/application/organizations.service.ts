@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateOrganizationCommand } from '../domain/model/commands/create-organization.command';
 import { OrganizationId } from '../domain/model/valueobjects/organization-id';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,6 +18,8 @@ import { MemberRole } from '../domain/model/valueobjects/member-role';
 
 @Injectable()
 export class OrganizationsService {
+    private logger = new Logger(OrganizationsService.name);
+
     constructor(
         @InjectRepository(Organization)
         private organizationRepository: Repository<Organization>,
@@ -65,6 +67,9 @@ export class OrganizationsService {
         await this.organizationRepository.save(organization);
         await this.memberRepository.save(member);
 
+        this.logger.log(
+            `Organization created with id ${organizationId.toString()}`,
+        );
         return organizationId;
     }
 
@@ -95,6 +100,9 @@ export class OrganizationsService {
             );
         }
 
+        this.logger.log(
+            `Deleting organization with id ${command.organizationId.toString()}. Performed by ${command.userId.toString()}`,
+        );
         await this.organizationRepository.manager.transaction(
             async (manager) => {
                 await manager.delete(Member, {
@@ -134,6 +142,10 @@ export class OrganizationsService {
         });
 
         await this.organizationRepository.save(result);
+
+        this.logger.log(
+            `Organization with id ${command.organizationId.toString()} updated`,
+        );
 
         return organization;
     }
