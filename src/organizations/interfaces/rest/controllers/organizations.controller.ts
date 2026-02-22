@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { CreateOrganizationRequest } from '../requests/create-organization.request';
 import { OrganizationCommandAssembler } from '../assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
 import { OrganizationsService } from 'src/organizations/application/organizations.service';
 import { OrganizationAssembler } from '../assemblers/organization.assembler';
 import { OrganizationQueryAssembler } from '../assemblers/organization-query.assembler';
+import { OrganizationResponse } from '../responses/organization.response';
 
 @UseGuards(AuthGuard)
 @Controller('api/v1/organizations')
@@ -15,17 +16,24 @@ export class OrganizationsController {
     private organizationService: OrganizationsService,
   ) {}
 
-  // @Get()
-  // async getCurrentUserOrganizations(): OrganizationResponse[] {
-  //   const user = this.userContext.user;
+  @Get()
+  async getCurrentUserOrganizations(): Promise<OrganizationResponse[]> {
+    const user = this.userContext.user;
 
-  //   const organizations = await this.organizationService.getByUserId(user.id);
+    const query = OrganizationQueryAssembler.toGetUserOrganizationsQuery(
+      user.userId,
+    );
 
-  //   return organizations.map(OrganizationAssembler.toResponseFromEntity);
-  // }
+    const organizations =
+      await this.organizationService.getUserOrganizations(query);
+
+    return OrganizationAssembler.toResponseListFromEntities(organizations);
+  }
 
   @Post()
-  async createOrganization(@Body() body: CreateOrganizationRequest) {
+  async createOrganization(
+    @Body() body: CreateOrganizationRequest,
+  ): Promise<OrganizationResponse> {
     const user = this.userContext.user;
 
     const command = OrganizationCommandAssembler.toCreateOrganizationCommand(

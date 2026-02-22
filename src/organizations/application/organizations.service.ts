@@ -8,6 +8,7 @@ import { MemberId } from '../domain/model/valueobjects/member-id';
 import { GetOrganizationByIdQuery } from '../domain/model/queries/get-organization-by-id.query';
 import { Member } from '../domain/model/member.entity';
 import { MemberName } from '../domain/model/valueobjects/member-name';
+import { GetUserOrganizationsQuery } from '../domain/model/queries/get-user-organizations.query';
 
 @Injectable()
 export class OrganizationsService {
@@ -18,6 +19,18 @@ export class OrganizationsService {
     @InjectRepository(Member)
     private memberRepository: Repository<Member>,
   ) {}
+
+  async getUserOrganizations(query: GetUserOrganizationsQuery) {
+    return this.organizationRepository
+      .createQueryBuilder('org')
+      .innerJoin(
+        Member,
+        'm',
+        'm.organizationId = org.id AND m.userId = :userId',
+        { userId: query.userId.toString() },
+      )
+      .getMany();
+  }
 
   async createOrganization(
     command: CreateOrganizationCommand,

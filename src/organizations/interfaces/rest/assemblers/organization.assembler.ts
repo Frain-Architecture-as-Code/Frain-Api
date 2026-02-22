@@ -12,4 +12,10 @@ export class OrganizationAssembler {
       updatedAt: entity.updatedAt.toString(),
     };
   }
+
+  static toResponseListFromEntities(
+    organizations: Organization[],
+  ): OrganizationResponse[] {
+    return organizations.map((org) => this.toResponseFromEntity(org));
+  }
 }
