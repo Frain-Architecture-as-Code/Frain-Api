@@ -26,6 +26,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './organizations/domain/model/organization.entity';
 import { Member } from './organizations/domain/model/member.entity';
 import { Invitation } from './organizations/domain/model/invitation.entity';
+import { HealthController } from './shared/interfaces/rest/health.controller';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -69,7 +70,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
             }),
         }),
     ],
-    controllers: [],
+    controllers: [HealthController],
     providers: [
         {
             provide: APP_PIPE,
