@@ -1,15 +1,12 @@
-import { OrganizationVisibility } from 'src/organizations/domain/model/valueobjects/organization-visibility';
+import { createZodDto } from 'nestjs-zod';
+import { OrganizationVisibility } from '../../../domain/model/valueobjects/organization-visibility';
+import z from 'zod';
 
-export class CreateOrganizationRequest {
-  name: string;
-  visibility: OrganizationVisibility;
+const createOrganizationRequestSchema = z.object({
+    name: z.string(),
+    visibility: z.enum(OrganizationVisibility),
+});
 
-  constructor(name: string, visibility: OrganizationVisibility) {
-    this.name = name;
-    if (visibility === OrganizationVisibility.PRIVATE) {
-      this.visibility = OrganizationVisibility.PRIVATE;
-    } else if (visibility === OrganizationVisibility.PUBLIC) {
-      this.visibility = OrganizationVisibility.PUBLIC;
-    }
-  }
-}
+export class CreateOrganizationRequest extends createZodDto(
+    createOrganizationRequestSchema,
+) {}
