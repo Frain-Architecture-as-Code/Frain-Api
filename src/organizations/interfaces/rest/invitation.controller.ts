@@ -7,15 +7,13 @@ import { InvitationCommandAssembler } from './assemblers/invitation-command.asse
 import { InvitationService } from 'src/organizations/application/services/invitation.service';
 import { InvitationAssembler } from './assemblers/invitation.assembler';
 import { InvitationQueryAssembler } from './assemblers/invitation-query.assembler';
-import { MemberService } from 'src/organizations/application/services/member.service';
 
 @UseGuards(AuthGuard)
 @Controller('/api/v1/organizations/:organizationId/invitations')
-export class InvitationController {
+export class InvitationsController {
     constructor(
         private userContext: UserContext,
         private invitationService: InvitationService,
-        private memberService: MemberService,
     ) {}
 
     @Get()

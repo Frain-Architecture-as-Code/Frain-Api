@@ -10,7 +10,8 @@ import { MemberService } from './application/services/member.service';
 import { MembersController } from './interfaces/rest/member.controller';
 import { Invitation } from './domain/model/invitation.entity';
 import { InvitationService } from './application/services/invitation.service';
-import { InvitationController } from './interfaces/rest/invitation.controller';
+import { InvitationsController } from './interfaces/rest/invitation.controller';
+import { InvitationActionsController } from './interfaces/rest/invitation-actions.controller';
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import { InvitationController } from './interfaces/rest/invitation.controller';
     controllers: [
         OrganizationsController,
         MembersController,
-        InvitationController,
+        InvitationsController,
+        InvitationActionsController,
     ],
     providers: [
         OrganizationsService,
