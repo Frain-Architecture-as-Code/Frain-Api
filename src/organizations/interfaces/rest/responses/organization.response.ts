@@ -1,7 +1,7 @@
 import { OrganizationVisibility } from 'src/organizations/domain/model/valueobjects/organization-visibility';
 
 export interface OrganizationResponse {
-    id: string;
+    organizationId: string;
     name: string;
     visibility: OrganizationVisibility;
     ownerMemberId: string;

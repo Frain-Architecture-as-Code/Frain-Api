@@ -4,7 +4,7 @@ import { OrganizationResponse } from '../responses/organization.response';
 export class OrganizationAssembler {
     static toResponseFromEntity(entity: Organization): OrganizationResponse {
         return {
-            id: entity.id.toString(),
+            organizationId: entity.id.toString(),
             name: entity.name.toString(),
             visibility: entity.visibility,
             ownerMemberId: entity.ownerMemberId.toString(),
