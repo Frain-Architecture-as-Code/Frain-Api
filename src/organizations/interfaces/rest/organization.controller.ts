@@ -12,7 +12,7 @@ import { CreateOrganizationRequest } from './requests/create-organization.reques
 import { OrganizationCommandAssembler } from './assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
-import { OrganizationsService } from 'src/organizations/application/services/organizations.service';
+import { OrganizationsService } from 'src/organizations/application/services/organization.service';
 import { OrganizationAssembler } from './assemblers/organization.assembler';
 import { OrganizationQueryAssembler } from './assemblers/organization-query.assembler';
 import { OrganizationResponse } from './responses/organization.response';
