@@ -7,9 +7,10 @@ import { MemberId } from './valueobjects/member-id';
 import { InvitationStatus } from './valueobjects/invitation-status';
 import { PrimaryColumn } from 'typeorm';
 import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
+import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
 
 @Entity()
-export class Invitation {
+export class Invitation extends AuditableEntity {
     @PrimaryColumn({
         type: 'uuid',
         transformer: createValueObjectTransformer(InvitationId),
@@ -45,4 +46,21 @@ export class Invitation {
         enum: InvitationStatus,
     })
     status: InvitationStatus;
+
+    public static create(params: {
+        invitationId: InvitationId;
+        targetEmail: EmailAddress;
+        role: MemberRole;
+        organizationId: OrganizationId;
+        inviterId: MemberId;
+    }): Invitation {
+        const invitation = new Invitation();
+        invitation.id = params.invitationId;
+        invitation.targetEmail = params.targetEmail;
+        invitation.role = params.role;
+        invitation.organizationId = params.organizationId;
+        invitation.inviterId = params.inviterId;
+        invitation.status = InvitationStatus.PENDING;
+        return invitation;
+    }
 }

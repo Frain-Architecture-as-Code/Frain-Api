@@ -71,6 +71,17 @@ export class Member extends AuditableEntity {
         return this.role === MemberRole.OWNER;
     }
 
+    public isAdmin(): boolean {
+        return this.role === MemberRole.ADMIN;
+    }
+    public isContributor(): boolean {
+        return this.role === MemberRole.CONTRIBUTOR;
+    }
+
+    public canInvitePeople(): boolean {
+        return this.role === MemberRole.OWNER || this.role === MemberRole.ADMIN;
+    }
+
     public update(newName?: MemberName, newRole?: MemberRole): Member {
         if (newName !== undefined) {
             this.name = newName;

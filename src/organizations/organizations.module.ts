@@ -9,13 +9,24 @@ import { Member } from './domain/model/member.entity';
 import { MemberService } from './application/member.service';
 import { MembersController } from './interfaces/rest/member.controller';
 import { Invitation } from './domain/model/invitation.entity';
+import { InvitationService } from './application/invitation.service';
+import { InvitationController } from './interfaces/rest/invitation.controller';
 
 @Module({
     imports: [
         SharedModule,
         TypeOrmModule.forFeature([Organization, Member, Invitation]),
     ],
-    controllers: [OrganizationsController, MembersController],
-    providers: [OrganizationsService, UserContext, MemberService],
+    controllers: [
+        OrganizationsController,
+        MembersController,
+        InvitationController,
+    ],
+    providers: [
+        OrganizationsService,
+        UserContext,
+        MemberService,
+        InvitationService,
+    ],
 })
 export class OrganizationsModule {}

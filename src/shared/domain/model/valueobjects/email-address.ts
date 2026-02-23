@@ -21,4 +21,8 @@ export class EmailAddress {
     public equals(other: EmailAddress): boolean {
         return this.value === other.value;
     }
+
+    public toString(): string {
+        return this.value;
+    }
 }
