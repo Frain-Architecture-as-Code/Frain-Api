@@ -25,6 +25,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './organizations/domain/model/organization.entity';
 import { Member } from './organizations/domain/model/member.entity';
+import { Invitation } from './organizations/domain/model/invitation.entity';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -63,7 +64,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
                 username: config.get<string>('DB_USER'),
                 password: config.get<string>('DB_PASSWORD'),
                 database: config.get<string>('DB_NAME'),
-                entities: [Organization, Member],
+                entities: [Organization, Member, Invitation],
                 synchronize: true,
             }),
         }),

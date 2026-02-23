@@ -5,7 +5,7 @@ import { MemberRole } from './valueobjects/member-role';
 import { OrganizationId } from './valueobjects/organization-id';
 import { MemberId } from './valueobjects/member-id';
 import { InvitationStatus } from './valueobjects/invitation-status';
-import { PrimaryColumn } from 'typeorm/browser';
+import { PrimaryColumn } from 'typeorm';
 import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
 
 @Entity()
