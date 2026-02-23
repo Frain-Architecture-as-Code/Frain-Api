@@ -13,6 +13,8 @@ import { InvalidUpdateMemberRequestException } from '../../domain/exceptions/inv
 import { EnrollMemberToOrganizationCommand } from '../../domain/model/commands/enroll-member-to-organization.command';
 import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { MemberName } from '../../domain/model/valueobjects/member-name';
+import { ExistsUserInOrganizationQuery } from 'src/organizations/domain/model/queries/exists-user-in-organization.query';
+import { MemberAlreadyExistsException } from 'src/organizations/domain/exceptions/member-already-exists.exception';
 
 @Injectable()
 export class MemberService {
@@ -39,6 +41,19 @@ export class MemberService {
         }
 
         return member;
+    }
+
+    async existsUserInOrganization(
+        query: ExistsUserInOrganizationQuery,
+    ): Promise<boolean> {
+        const member = await this.memberRepository.findOne({
+            where: {
+                userId: query.userId,
+                organizationId: query.organizationId,
+            },
+        });
+
+        return member !== null;
     }
 
     async getMemberById(query: GetMemberByIdQuery) {
@@ -129,6 +144,15 @@ export class MemberService {
     async enrollMemberToOrganization(
         command: EnrollMemberToOrganizationCommand,
     ): Promise<MemberId> {
+        const currentMember = await this.existsUserInOrganization({
+            userId: command.user.id,
+            organizationId: command.organizationId,
+        });
+
+        if (currentMember) {
+            throw new MemberAlreadyExistsException(command.user.id);
+        }
+
         const memberId = MemberId.generate();
 
         const member = Member.create({

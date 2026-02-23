@@ -8,6 +8,7 @@ import { InvitationStatus } from './valueobjects/invitation-status';
 import { PrimaryColumn } from 'typeorm';
 import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
 import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
+import { InvalidInvitationStatusChangeException } from '../exceptions/invalid-invitation-status-change.exception';
 
 @Entity()
 export class Invitation extends AuditableEntity {
@@ -62,5 +63,25 @@ export class Invitation extends AuditableEntity {
         invitation.inviterId = params.inviterId;
         invitation.status = InvitationStatus.PENDING;
         return invitation;
+    }
+
+    public accept(): void {
+        if (this.status !== InvitationStatus.PENDING) {
+            throw new InvalidInvitationStatusChangeException(
+                this.status,
+                InvitationStatus.ACCEPTED,
+            );
+        }
+        this.status = InvitationStatus.ACCEPTED;
+    }
+
+    public decline(): void {
+        if (this.status !== InvitationStatus.PENDING) {
+            throw new InvalidInvitationStatusChangeException(
+                this.status,
+                InvitationStatus.DECLINED,
+            );
+        }
+        this.status = InvitationStatus.DECLINED;
     }
 }
