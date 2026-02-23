@@ -22,7 +22,7 @@ export class MembersController {
 
         const query = MemberQueryAssembler.toGetOrganizationMembersQuery(
             organizationId,
-            user.userId,
+            user.id,
         );
 
         const members = await this.memberService.getOrganizationMembers(query);

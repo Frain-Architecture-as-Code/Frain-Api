@@ -57,9 +57,11 @@ export class OrganizationsService {
 
         const member = Member.create({
             memberId: memberId,
-            userId: command.currentUser.userId,
+            userId: command.currentUser.id,
             organizationId: organizationId,
-            name: MemberName.fromString(command.currentUser.username.name),
+            name: MemberName.fromString(
+                command.currentUser.username.toString(),
+            ),
             picture: command.currentUser.picture,
             role: MemberRole.OWNER,
         });

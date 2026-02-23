@@ -10,6 +10,9 @@ import { GetMemberByIdQuery } from '../domain/model/queries/get-member-by-id.que
 import { MemberNotFoundException } from '../domain/exceptions/member-not-found.exception';
 import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
 import { InvalidUpdateMemberRequestException } from '../domain/exceptions/invalid-update-member-request.exception';
+import { EnrollMemberToOrganizationCommand } from '../domain/model/commands/enroll-member-to-organization.command';
+import { MemberId } from '../domain/model/valueobjects/member-id';
+import { MemberName } from '../domain/model/valueobjects/member-name';
 
 @Injectable()
 export class MemberService {
@@ -74,7 +77,7 @@ export class MemberService {
         // We make sure that the current user is a member of the organization
         const currentMember = await this.getMemberByUserIdAndOrganizationId({
             organizationId: command.organizationId,
-            userId: command.user.userId,
+            userId: command.user.id,
         });
 
         const targetMember = await this.getMemberById({
@@ -114,5 +117,24 @@ export class MemberService {
         }
 
         return targetMember;
+    }
+
+    async enrollMemberToOrganization(
+        command: EnrollMemberToOrganizationCommand,
+    ): Promise<MemberId> {
+        const memberId = MemberId.generate();
+
+        const member = Member.create({
+            memberId,
+            name: MemberName.fromString(command.user.username.toString()),
+            organizationId: command.organizationId,
+            picture: command.user.picture,
+            role: command.role,
+            userId: command.user.id,
+        });
+
+        await this.memberRepository.save(member);
+
+        return member.id;
     }
 }

@@ -39,7 +39,7 @@ export class OrganizationCommandAssembler {
             OrganizationId.fromString(organizationId),
             OrganizationName.fromString(request.name),
             request.visibility,
-            user.userId,
+            user.id,
         );
     }
 }

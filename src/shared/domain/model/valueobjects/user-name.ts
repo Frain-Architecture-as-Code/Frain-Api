@@ -2,18 +2,22 @@ import z from 'zod';
 import { StringPatternMismatchException } from '../../exceptions/string-pattern-mismatch.exception';
 
 export class UserName {
-    private constructor(readonly name: string) {}
+    private constructor(readonly value: string) {}
 
-    public static fromString(name: string): UserName {
-        if (!this.isValid(name)) {
+    public static fromString(value: string): UserName {
+        if (!this.isValid(value)) {
             throw new StringPatternMismatchException(
-                `Invalid User Name: ${name}`,
+                `Invalid User Name: ${value}`,
             );
         }
-        return new UserName(name);
+        return new UserName(value);
     }
 
-    private static isValid(name: string): boolean {
-        return z.string().safeParse(name).success;
+    private static isValid(value: string): boolean {
+        return z.string().safeParse(value).success;
+    }
+
+    public toString(): string {
+        return this.value;
     }
 }

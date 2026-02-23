@@ -4,7 +4,7 @@ import { UserId } from './valueobjects/user-id';
 import { UserName } from './valueobjects/user-name';
 
 export class User {
-    readonly userId: UserId;
+    readonly id: UserId;
     readonly email: EmailAddress;
     readonly picture: Picture;
     readonly username: UserName;
@@ -15,7 +15,7 @@ export class User {
         picture: Picture,
         username: UserName,
     ) {
-        this.userId = userId;
+        this.id = userId;
         this.email = email;
         this.picture = picture;
         this.username = username;

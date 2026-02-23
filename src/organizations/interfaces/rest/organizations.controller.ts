@@ -35,7 +35,7 @@ export class OrganizationsController {
         const user = this.userContext.user;
 
         const query = OrganizationQueryAssembler.toGetUserOrganizationsQuery(
-            user.userId,
+            user.id,
         );
 
         const organizations =
@@ -76,7 +76,7 @@ export class OrganizationsController {
 
         await this.memberService.getMemberByUserIdAndOrganizationId(
             MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
-                user.userId,
+                user.id,
                 id,
             ),
         );
@@ -117,7 +117,7 @@ export class OrganizationsController {
         const command =
             OrganizationCommandAssembler.toDeleteOrganizationCommand(
                 id,
-                user.userId,
+                user.id,
             );
 
         const result =
