@@ -5,6 +5,11 @@ import { Member } from '../domain/model/member.entity';
 import { GetMemberByUserIdAndOrganizationIdQuery } from '../domain/model/queries/get-member-by-user-id-and-organization-id.query';
 import { UserIsNotMemberOfOrganizationException } from '../domain/exceptions/user-is-not-member-of-organization.exception';
 import { GetOrganizationMembersQuery } from '../domain/model/queries/get-organization-members.query';
+import { UpdateMemberCommand } from '../domain/model/commands/update-member.command';
+import { GetMemberByIdQuery } from '../domain/model/queries/get-member-by-id.query';
+import { MemberNotFoundException } from '../domain/exceptions/member-not-found.exception';
+import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
+import { InvalidUpdateMemberRequestException } from '../domain/exceptions/invalid-update-member-request.exception';
 
 @Injectable()
 export class MemberService {
@@ -33,6 +38,20 @@ export class MemberService {
         return member;
     }
 
+    async getMemberById(query: GetMemberByIdQuery) {
+        const member = await this.memberRepository.findOne({
+            where: {
+                id: query.memberId,
+            },
+        });
+
+        if (member === null) {
+            throw new MemberNotFoundException(query.memberId);
+        }
+
+        return member;
+    }
+
     async getOrganizationMembers(
         query: GetOrganizationMembersQuery,
     ): Promise<Member[]> {
@@ -49,5 +68,51 @@ export class MemberService {
         });
 
         return members;
+    }
+
+    async updateMember(command: UpdateMemberCommand): Promise<Member> {
+        // We make sure that the current user is a member of the organization
+        const currentMember = await this.getMemberByUserIdAndOrganizationId({
+            organizationId: command.organizationId,
+            userId: command.user.userId,
+        });
+
+        const targetMember = await this.getMemberById({
+            memberId: command.toUpdatememberId,
+        });
+
+        if (command.newMemberName) {
+            const existsAlreadyAMemberWithNewName =
+                await this.memberRepository.findOne({
+                    where: {
+                        organizationId: command.organizationId,
+                        name: command.newMemberName,
+                    },
+                });
+
+            if (existsAlreadyAMemberWithNewName) {
+                throw new InvalidUpdateMemberRequestException(
+                    command.newMemberName,
+                );
+            }
+        }
+
+        if (currentMember.id.equals(targetMember.id)) {
+            // a member only can update their name, even if its the owner.
+            targetMember.update(command.newMemberName, undefined);
+            await this.memberRepository.save(targetMember);
+
+            if (command.newMemberRole) {
+                throw new InsufficientPermissionException(
+                    `You cannot update your own role. Updating to: ${command.newMemberRole}.`,
+                );
+            }
+        } else if (currentMember.isOwner()) {
+            // a member cannot update their own role, only the owner can
+            targetMember.update(command.newMemberName, command.newMemberRole);
+            await this.memberRepository.save(targetMember);
+        }
+
+        return targetMember;
     }
 }

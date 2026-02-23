@@ -7,9 +7,9 @@ import { MemberRole } from '../valueobjects/member-role';
 export class UpdateMemberCommand {
     constructor(
         public readonly organizationId: OrganizationId,
-        public readonly memberId: MemberId,
+        public readonly toUpdatememberId: MemberId,
         public readonly user: User,
-        public readonly newMemberName: MemberName,
-        public readonly newMemberRole: MemberRole,
+        public readonly newMemberName?: MemberName,
+        public readonly newMemberRole?: MemberRole,
     ) {}
 }

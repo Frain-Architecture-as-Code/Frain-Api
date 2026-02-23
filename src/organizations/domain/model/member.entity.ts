@@ -70,4 +70,14 @@ export class Member extends AuditableEntity {
     public isOwner(): boolean {
         return this.role === MemberRole.OWNER;
     }
+
+    public update(newName?: MemberName, newRole?: MemberRole): Member {
+        if (newName !== undefined) {
+            this.name = newName;
+        }
+        if (newRole !== undefined) {
+            this.role = newRole;
+        }
+        return this;
+    }
 }

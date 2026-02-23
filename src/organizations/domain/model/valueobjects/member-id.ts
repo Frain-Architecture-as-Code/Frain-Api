@@ -20,4 +20,8 @@ export class MemberId {
     public toString(): string {
         return this.value;
     }
+
+    public equals(other: MemberId): boolean {
+        return this.value === other.value;
+    }
 }

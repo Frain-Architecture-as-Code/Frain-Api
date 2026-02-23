@@ -16,7 +16,9 @@ export class MemberCommandAssembler {
             OrganizationId.fromString(organizationId),
             MemberId.fromString(memberId),
             user,
-            MemberName.fromString(request.newName),
+            request.newName
+                ? MemberName.fromString(request.newName)
+                : undefined,
             request.newRole,
         );
     }

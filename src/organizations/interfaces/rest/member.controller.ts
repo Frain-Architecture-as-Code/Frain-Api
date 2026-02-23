@@ -44,8 +44,10 @@ export class MembersController {
             user,
             request,
         );
-        
-        const udpatedMember = this.memberService.
+
+        const udpatedMember = await this.memberService.updateMember(command);
+
+        return MemberAssembler.toResponseFromEntity(udpatedMember);
     }
 
     @Delete(':memberId')
