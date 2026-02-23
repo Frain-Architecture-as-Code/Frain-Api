@@ -1,4 +1,5 @@
 import { GetMemberByUserIdAndOrganizationIdQuery } from 'src/organizations/domain/model/queries/get-member-by-user-id-and-organization-id.query';
+import { GetOrganizationMembersQuery } from 'src/organizations/domain/model/queries/get-organization-members.query';
 import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
 import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
 
@@ -10,6 +11,16 @@ export class MemberQueryAssembler {
         return new GetMemberByUserIdAndOrganizationIdQuery(
             userId,
             OrganizationId.fromString(organizationId),
+        );
+    }
+
+    static toGetOrganizationMembersQuery(
+        organizationId: string,
+        userId: UserId,
+    ): GetOrganizationMembersQuery {
+        return new GetOrganizationMembersQuery(
+            OrganizationId.fromString(organizationId),
+            userId,
         );
     }
 }

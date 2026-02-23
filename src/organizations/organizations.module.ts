@@ -7,10 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './domain/model/organization.entity';
 import { Member } from './domain/model/member.entity';
 import { MemberService } from './application/member.service';
+import { MembersController } from './interfaces/rest/member.controller';
 
 @Module({
     imports: [SharedModule, TypeOrmModule.forFeature([Organization, Member])],
-    controllers: [OrganizationsController],
+    controllers: [OrganizationsController, MembersController],
     providers: [OrganizationsService, UserContext, MemberService],
 })
 export class OrganizationsModule {}

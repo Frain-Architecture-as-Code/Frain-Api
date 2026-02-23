@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Member } from '../domain/model/member.entity';
 import { GetMemberByUserIdAndOrganizationIdQuery } from '../domain/model/queries/get-member-by-user-id-and-organization-id.query';
 import { UserIsNotMemberOfOrganizationException } from '../domain/exceptions/user-is-not-member-of-organization.exception';
+import { GetOrganizationMembersQuery } from '../domain/model/queries/get-organization-members.query';
 
 @Injectable()
 export class MemberService {
@@ -30,5 +31,23 @@ export class MemberService {
         }
 
         return member;
+    }
+
+    async getOrganizationMembers(
+        query: GetOrganizationMembersQuery,
+    ): Promise<Member[]> {
+        // Validates if the current user is a member of the organization
+        await this.getMemberByUserIdAndOrganizationId({
+            organizationId: query.organizationId,
+            userId: query.userId,
+        });
+
+        const members = await this.memberRepository.find({
+            where: {
+                organizationId: query.organizationId,
+            },
+        });
+
+        return members;
     }
 }
