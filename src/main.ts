@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestFactory } from '@nestjs/core';
