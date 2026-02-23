@@ -22,7 +22,7 @@ import { MemberService } from 'src/organizations/application/member.service';
 import { MemberQueryAssembler } from './assemblers/member-query.assembler';
 
 @UseGuards(AuthGuard)
-@Controller('api/v1/organizations')
+@Controller('/api/v1/organizations')
 export class OrganizationsController {
     constructor(
         private userContext: UserContext,

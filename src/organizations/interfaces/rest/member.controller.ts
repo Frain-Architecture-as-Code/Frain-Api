@@ -17,7 +17,7 @@ import { MemberCommandAssembler } from './assemblers/member-command.assembler';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
 
 @UseGuards(AuthGuard)
-@Controller('api/v1/organizations/:organizationId/members')
+@Controller('/api/v1/organizations/:organizationId/members')
 export class MembersController {
     constructor(
         private userContext: UserContext,
