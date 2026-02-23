@@ -8,8 +8,8 @@ export class OrganizationAssembler {
             name: entity.name.toString(),
             visibility: entity.visibility,
             ownerMemberId: entity.ownerMemberId.toString(),
-            createdAt: entity.createdAt.toString(),
-            updatedAt: entity.updatedAt.toString(),
+            createdAt: entity.createdAt,
+            updatedAt: entity.updatedAt,
         };
     }
 

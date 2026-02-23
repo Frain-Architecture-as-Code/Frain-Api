@@ -10,8 +10,8 @@ export class MemberAssembler {
             memberName: member.name.toString(),
             memberRole: member.role,
             picture: member.picture.toString(),
-            createdAt: member.createdAt.toString(),
-            updatedAt: member.updatedAt.toString(),
+            createdAt: member.createdAt,
+            updatedAt: member.updatedAt,
         };
     }
 

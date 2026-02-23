@@ -7,6 +7,6 @@ export interface MemberResponse {
     memberName: string;
     memberRole: MemberRole;
     picture: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

@@ -5,6 +5,6 @@ export interface OrganizationResponse {
     name: string;
     visibility: OrganizationVisibility;
     ownerMemberId: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
