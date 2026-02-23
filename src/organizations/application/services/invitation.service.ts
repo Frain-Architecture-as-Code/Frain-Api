@@ -9,10 +9,6 @@ import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
 import { MemberService } from './member.service';
 import { AcceptInvitationCommand } from 'src/organizations/domain/model/commands/accept-invitation.command';
 import { InvitationNotFoundException } from 'src/organizations/domain/exceptions/invitation-not-found.exception';
-import { MemberAlreadyExistsException } from 'src/organizations/domain/exceptions/member-already-exists.exception';
-import { Member } from 'src/organizations/domain/model/member.entity';
-import { MemberId } from 'src/organizations/domain/model/valueobjects/member-id';
-import { MemberName } from 'src/organizations/domain/model/valueobjects/member-name';
 import { ExistsInvitationQuery } from 'src/organizations/domain/model/queries/exists-invitation.query';
 import { DeclineInvitationCommand } from 'src/organizations/domain/model/commands/decline-invitation.command';
 
