@@ -2,9 +2,7 @@ import z from 'zod';
 import { StringPatternMismatchException } from '../../exceptions/string-pattern-mismatch.exception';
 
 export class EmailAddress {
-    private constructor(readonly email: string) {
-        this.email = email;
-    }
+    private constructor(private readonly value: string) {}
 
     public static isValid(email: string) {
         const emailSchema = z.email();
@@ -18,5 +16,9 @@ export class EmailAddress {
             );
         }
         return new EmailAddress(email);
+    }
+
+    public equals(other: EmailAddress): boolean {
+        return this.value === other.value;
     }
 }
