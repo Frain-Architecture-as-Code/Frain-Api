@@ -1,4 +1,4 @@
-import { NotFoundException } from 'src/shared/domain/exceptions/not-found-exception';
+import { NotFoundException } from '@nestjs/common';
 import { MemberId } from '../model/valueobjects/member-id';
 
 export class MemberNotFoundException extends NotFoundException {

@@ -1,5 +1,7 @@
-export class InsufficientPermissionException extends Error {
+import { HttpException, HttpStatus } from '@nestjs/common';
+
+export class InsufficientPermissionException extends HttpException {
     constructor(message: string) {
-        super(message);
+        super(message, HttpStatus.FORBIDDEN);
     }
 }

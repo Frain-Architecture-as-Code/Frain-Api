@@ -1,4 +1,4 @@
-import { NotFoundException } from 'src/shared/domain/exceptions/not-found-exception';
+import { NotFoundException } from '@nestjs/common';
 import { OrganizationId } from '../model/valueobjects/organization-id';
 import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
 

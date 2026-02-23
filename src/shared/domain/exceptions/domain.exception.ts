@@ -1,6 +1,7 @@
-export class DomainException extends Error {
+import { HttpException, HttpStatus } from '@nestjs/common';
+
+export class DomainException extends HttpException {
     constructor(message: string) {
-        super(message);
-        this.name = DomainException.name;
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

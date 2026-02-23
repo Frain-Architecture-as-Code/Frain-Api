@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Member } from '../domain/model/member.entity';
@@ -74,6 +74,13 @@ export class MemberService {
     }
 
     async updateMember(command: UpdateMemberCommand): Promise<Member> {
+        if (
+            (command.newMemberName === undefined && command.newMemberRole) ===
+            undefined
+        ) {
+            throw new BadRequestException('Invalid update member request');
+        }
+
         // We make sure that the current user is a member of the organization
         const currentMember = await this.getMemberByUserIdAndOrganizationId({
             organizationId: command.organizationId,
