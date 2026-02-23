@@ -1,4 +1,4 @@
-import { Invitation } from 'src/organizations/domain/model/invitation.entity';
+import { Invitation } from '../../../domain/model/invitation.entity';
 import { InvitationResponse } from '../responses/invitation.response';
 
 export class InvitationAssembler {

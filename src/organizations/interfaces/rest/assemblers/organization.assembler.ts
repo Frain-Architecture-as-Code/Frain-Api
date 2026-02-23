@@ -1,4 +1,4 @@
-import { Organization } from 'src/organizations/domain/model/organization.entity';
+import { Organization } from '../../../domain/model/organization.entity';
 import { OrganizationResponse } from '../responses/organization.response';
 
 export class OrganizationAssembler {

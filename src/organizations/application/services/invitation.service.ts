@@ -4,13 +4,13 @@ import { Invitation } from '../../domain/model/invitation.entity';
 import { Repository } from 'typeorm';
 import { getInvitationsByOrganizationIdQuery } from '../../domain/model/queries/get-invitations-by-organization-id.query';
 import { SendInvitationCommand } from '../../domain/model/commands/send-invitation.command';
-import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
+import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
 import { MemberService } from './member.service';
-import { AcceptInvitationCommand } from 'src/organizations/domain/model/commands/accept-invitation.command';
-import { InvitationNotFoundException } from 'src/organizations/domain/exceptions/invitation-not-found.exception';
-import { ExistsInvitationQuery } from 'src/organizations/domain/model/queries/exists-invitation.query';
-import { DeclineInvitationCommand } from 'src/organizations/domain/model/commands/decline-invitation.command';
+import { AcceptInvitationCommand } from '../../domain/model/commands/accept-invitation.command';
+import { InvitationNotFoundException } from '../../domain/exceptions/invitation-not-found.exception';
+import { ExistsInvitationQuery } from '../../domain/model/queries/exists-invitation.query';
+import { DeclineInvitationCommand } from '../../domain/model/commands/decline-invitation.command';
 
 @Injectable()
 export class InvitationService {

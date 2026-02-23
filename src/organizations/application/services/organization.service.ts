@@ -10,7 +10,7 @@ import { Member } from '../../domain/model/member.entity';
 import { MemberName } from '../../domain/model/valueobjects/member-name';
 import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
 import { DeleteOrganizationCommand } from '../../domain/model/commands/delete-organization.command';
-import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
+import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { UpdateOrganizationCommand } from '../../domain/model/commands/update-organization.command';
 import { MemberService } from './member.service';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';

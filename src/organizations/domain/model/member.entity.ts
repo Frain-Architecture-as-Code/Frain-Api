@@ -1,11 +1,11 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { MemberId } from './valueobjects/member-id';
-import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { createValueObjectTransformer } from '../../../shared/infrastructure/persistence/typeorm/transformers';
+import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
 import { OrganizationId } from './valueobjects/organization-id';
 import { MemberName } from './valueobjects/member-name';
-import { Picture } from 'src/shared/domain/model/valueobjects/picture';
-import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
+import { Picture } from '../../../shared/domain/model/valueobjects/picture';
+import { AuditableEntity } from '../../../shared/domain/model/auditable-entity';
 import { MemberRole } from './valueobjects/member-role';
 
 @Entity()

@@ -3,8 +3,8 @@ import { OrganizationId } from './valueobjects/organization-id';
 import { OrganizationName } from './valueobjects/organization-name';
 import { OrganizationVisibility } from './valueobjects/organization-visibility';
 import { MemberId } from './valueobjects/member-id';
-import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
-import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
+import { AuditableEntity } from '../../../shared/domain/model/auditable-entity';
+import { createValueObjectTransformer } from '../../../shared/infrastructure/persistence/typeorm/transformers';
 
 @Entity()
 export class Organization extends AuditableEntity {

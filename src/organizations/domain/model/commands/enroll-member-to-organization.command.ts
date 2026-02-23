@@ -1,6 +1,6 @@
 import { MemberRole } from '../valueobjects/member-role';
 import { OrganizationId } from '../valueobjects/organization-id';
-import { User } from 'src/shared/domain/model/user';
+import { User } from '../../../../shared/domain/model/user';
 
 export class EnrollMemberToOrganizationCommand {
     constructor(

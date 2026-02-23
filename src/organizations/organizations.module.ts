@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { OrganizationsController } from './interfaces/rest/organization.controller';
 import { OrganizationsService } from './application/services/organization.service';
-import { UserContext } from 'src/shared/infrastructure/security/user-context';
-import { SharedModule } from 'src/shared/shared.module';
+import { UserContext } from '../shared/infrastructure/security/user-context';
+import { SharedModule } from '../shared/shared.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Organization } from './domain/model/organization.entity';
 import { Member } from './domain/model/member.entity';

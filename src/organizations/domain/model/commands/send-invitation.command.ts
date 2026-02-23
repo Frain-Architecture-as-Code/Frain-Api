@@ -1,5 +1,5 @@
-import { User } from 'src/shared/domain/model/user';
-import { EmailAddress } from 'src/shared/domain/model/valueobjects/email-address';
+import { User } from '../../../../shared/domain/model/user';
+import { EmailAddress } from '../../../../shared/domain/model/valueobjects/email-address';
 import { OrganizationId } from '../valueobjects/organization-id';
 import { MemberRole } from '../valueobjects/member-role';
 

@@ -8,13 +8,13 @@ import { GetOrganizationMembersQuery } from '../../domain/model/queries/get-orga
 import { UpdateMemberCommand } from '../../domain/model/commands/update-member.command';
 import { GetMemberByIdQuery } from '../../domain/model/queries/get-member-by-id.query';
 import { MemberNotFoundException } from '../../domain/exceptions/member-not-found.exception';
-import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
+import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { InvalidUpdateMemberRequestException } from '../../domain/exceptions/invalid-update-member-request.exception';
 import { EnrollMemberToOrganizationCommand } from '../../domain/model/commands/enroll-member-to-organization.command';
 import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { MemberName } from '../../domain/model/valueobjects/member-name';
-import { ExistsUserInOrganizationQuery } from 'src/organizations/domain/model/queries/exists-user-in-organization.query';
-import { MemberAlreadyExistsException } from 'src/organizations/domain/exceptions/member-already-exists.exception';
+import { ExistsUserInOrganizationQuery } from '../../domain/model/queries/exists-user-in-organization.query';
+import { MemberAlreadyExistsException } from '../../domain/exceptions/member-already-exists.exception';
 
 @Injectable()
 export class MemberService {

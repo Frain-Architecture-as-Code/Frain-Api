@@ -1,4 +1,4 @@
-import { User } from 'src/shared/domain/model/user';
+import { User } from '../../../../shared/domain/model/user';
 import { InvitationId } from '../valueobjects/invitation-id';
 
 export class AcceptInvitationCommand {

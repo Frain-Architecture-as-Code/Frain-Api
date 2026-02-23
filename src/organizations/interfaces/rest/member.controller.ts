@@ -7,14 +7,14 @@ import {
     Patch,
     UseGuards,
 } from '@nestjs/common';
-import { MemberService } from 'src/organizations/application/services/member.service';
-import { UserContext } from 'src/shared/infrastructure/security/user-context';
+import { MemberService } from '../../application/services/member.service';
+import { UserContext } from '../../../shared/infrastructure/security/user-context';
 import { MemberQueryAssembler } from './assemblers/member-query.assembler';
 import { MemberResponse } from './responses/member.response';
 import { MemberAssembler } from './assemblers/member.assembler';
 import { UpdateMemberRequest } from './requests/update-member.request';
 import { MemberCommandAssembler } from './assemblers/member-command.assembler';
-import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
+import { AuthGuard } from '../../../shared/infrastructure/security/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('/api/v1/organizations/:organizationId/members')

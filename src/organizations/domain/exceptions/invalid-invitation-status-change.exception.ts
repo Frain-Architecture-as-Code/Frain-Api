@@ -1,4 +1,4 @@
-import { DomainException } from 'src/shared/domain/exceptions/domain.exception';
+import { DomainException } from '../../../shared/domain/exceptions/domain.exception';
 import { InvitationStatus } from '../model/valueobjects/invitation-status';
 
 export class InvalidInvitationStatusChangeException extends DomainException {

@@ -1,4 +1,4 @@
-import { OrganizationVisibility } from 'src/organizations/domain/model/valueobjects/organization-visibility';
+import { OrganizationVisibility } from '../../../domain/model/valueobjects/organization-visibility';
 
 export interface OrganizationResponse {
     organizationId: string;

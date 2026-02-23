@@ -1,9 +1,9 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { EmailAddress } from 'src/shared/domain/model/valueobjects/email-address';
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
-import { UserName } from 'src/shared/domain/model/valueobjects/user-name';
-import { User } from 'src/shared/domain/model/user';
-import { Picture } from 'src/shared/domain/model/valueobjects/picture';
+import { EmailAddress } from '../../domain/model/valueobjects/email-address';
+import { UserId } from '../../domain/model/valueobjects/user-id';
+import { UserName } from '../../domain/model/valueobjects/user-name';
+import { User } from '../../domain/model/user';
+import { Picture } from '../../domain/model/valueobjects/picture';
 import { REQUEST } from '@nestjs/core';
 
 export interface JwtPayload {

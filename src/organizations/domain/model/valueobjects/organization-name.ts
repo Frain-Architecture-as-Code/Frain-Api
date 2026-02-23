@@ -1,4 +1,4 @@
-import { StringLengthException } from 'src/shared/domain/exceptions/string-length.exception';
+import { StringLengthException } from '../../../../shared/domain/exceptions/string-length.exception';
 
 export class OrganizationName {
     public static MIN_LENGTH = 3;

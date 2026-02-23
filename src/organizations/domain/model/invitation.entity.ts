@@ -1,13 +1,13 @@
 import { Column, Entity } from 'typeorm';
 import { InvitationId } from './valueobjects/invitation-id';
-import { EmailAddress } from 'src/shared/domain/model/valueobjects/email-address';
+import { EmailAddress } from '../../../shared/domain/model/valueobjects/email-address';
 import { MemberRole } from './valueobjects/member-role';
 import { OrganizationId } from './valueobjects/organization-id';
 import { MemberId } from './valueobjects/member-id';
 import { InvitationStatus } from './valueobjects/invitation-status';
 import { PrimaryColumn } from 'typeorm';
-import { createValueObjectTransformer } from 'src/shared/infrastructure/persistence/typeorm/transformers';
-import { AuditableEntity } from 'src/shared/domain/model/auditable-entity';
+import { createValueObjectTransformer } from '../../../shared/infrastructure/persistence/typeorm/transformers';
+import { AuditableEntity } from '../../../shared/domain/model/auditable-entity';
 import { InvalidInvitationStatusChangeException } from '../exceptions/invalid-invitation-status-change.exception';
 
 @Entity()

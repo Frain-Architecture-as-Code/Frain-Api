@@ -1,4 +1,4 @@
-import { StringLengthException } from 'src/shared/domain/exceptions/string-length.exception';
+import { StringLengthException } from '../../../shared/domain/exceptions/string-length.exception';
 import { OrganizationName } from '../model/valueobjects/organization-name';
 
 export class InvalidOrganizationNameException extends StringLengthException {

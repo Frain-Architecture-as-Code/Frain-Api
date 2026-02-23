@@ -1,4 +1,4 @@
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
 
 export class GetUserOrganizationsQuery {
     constructor(public readonly userId: UserId) {}

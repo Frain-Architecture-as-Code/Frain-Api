@@ -1,4 +1,4 @@
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
 import { OrganizationId } from '../valueobjects/organization-id';
 import { OrganizationName } from '../valueobjects/organization-name';
 import { OrganizationVisibility } from '../valueobjects/organization-visibility';

@@ -1,4 +1,4 @@
-import { DomainException } from 'src/shared/domain/exceptions/domain.exception';
+import { DomainException } from '../../../shared/domain/exceptions/domain.exception';
 import { MemberName } from '../model/valueobjects/member-name';
 
 export class InvalidUpdateMemberRequestException extends DomainException {

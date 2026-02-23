@@ -1,7 +1,7 @@
-import { GetMemberByUserIdAndOrganizationIdQuery } from 'src/organizations/domain/model/queries/get-member-by-user-id-and-organization-id.query';
-import { GetOrganizationMembersQuery } from 'src/organizations/domain/model/queries/get-organization-members.query';
-import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { GetMemberByUserIdAndOrganizationIdQuery } from '../../../domain/model/queries/get-member-by-user-id-and-organization-id.query';
+import { GetOrganizationMembersQuery } from '../../../domain/model/queries/get-organization-members.query';
+import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
+import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
 
 export class MemberQueryAssembler {
     static toGetMemberByUserIdAndOrganizationIdQuery(

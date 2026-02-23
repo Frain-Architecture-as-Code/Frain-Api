@@ -1,4 +1,4 @@
-import { StringPatternMismatchException } from 'src/shared/domain/exceptions/string-pattern-mismatch.exception';
+import { StringPatternMismatchException } from '../../../../shared/domain/exceptions/string-pattern-mismatch.exception';
 import z from 'zod';
 
 export class InvitationId {

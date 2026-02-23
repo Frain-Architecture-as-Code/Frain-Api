@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { MemberRole } from 'src/organizations/domain/model/valueobjects/member-role';
+import { MemberRole } from '../../../domain/model/valueobjects/member-role';
 import z from 'zod';
 
 const sendInvitationRequestSchema = z.object({

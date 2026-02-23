@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { OrganizationId } from '../model/valueobjects/organization-id';
-import { UserId } from 'src/shared/domain/model/valueobjects/user-id';
+import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
 
 export class UserIsNotMemberOfOrganizationException extends NotFoundException {
     constructor(memberId: UserId, organizationId: OrganizationId) {

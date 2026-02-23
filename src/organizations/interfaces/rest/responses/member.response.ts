@@ -1,4 +1,4 @@
-import { MemberRole } from 'src/organizations/domain/model/valueobjects/member-role';
+import { MemberRole } from '../../../domain/model/valueobjects/member-role';
 
 export interface MemberResponse {
     memberId: string;

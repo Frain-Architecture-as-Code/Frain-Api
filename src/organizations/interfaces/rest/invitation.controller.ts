@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { SendInvitationRequest } from './requests/send-invitation.request';
-import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
-import { UserContext } from 'src/shared/infrastructure/security/user-context';
+import { AuthGuard } from '../../../shared/infrastructure/security/auth.guard';
+import { UserContext } from '../../../shared/infrastructure/security/user-context';
 import { InvitationResponse } from './responses/invitation.response';
 import { InvitationCommandAssembler } from './assemblers/invitation-command.assembler';
-import { InvitationService } from 'src/organizations/application/services/invitation.service';
+import { InvitationService } from '../../application/services/invitation.service';
 import { InvitationAssembler } from './assemblers/invitation.assembler';
 import { InvitationQueryAssembler } from './assemblers/invitation-query.assembler';
 

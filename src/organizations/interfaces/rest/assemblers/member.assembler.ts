@@ -1,4 +1,4 @@
-import { Member } from 'src/organizations/domain/model/member.entity';
+import { Member } from '../../../domain/model/member.entity';
 import { MemberResponse } from '../responses/member.response';
 
 export class MemberAssembler {

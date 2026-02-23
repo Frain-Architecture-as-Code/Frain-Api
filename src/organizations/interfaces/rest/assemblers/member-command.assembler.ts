@@ -1,9 +1,9 @@
-import { UpdateMemberCommand } from 'src/organizations/domain/model/commands/update-member.command';
-import { User } from 'src/shared/domain/model/user';
+import { UpdateMemberCommand } from '../../../domain/model/commands/update-member.command';
+import { User } from '../../../../shared/domain/model/user';
 import { UpdateMemberRequest } from '../requests/update-member.request';
-import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
-import { MemberId } from 'src/organizations/domain/model/valueobjects/member-id';
-import { MemberName } from 'src/organizations/domain/model/valueobjects/member-name';
+import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
+import { MemberId } from '../../../domain/model/valueobjects/member-id';
+import { MemberName } from '../../../domain/model/valueobjects/member-name';
 
 export class MemberCommandAssembler {
     static toUpdateMemberCommand(

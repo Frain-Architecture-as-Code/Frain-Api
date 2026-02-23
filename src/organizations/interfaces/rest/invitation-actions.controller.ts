@@ -1,9 +1,9 @@
 import { Controller, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { UserContext } from 'src/shared/infrastructure/security/user-context';
+import { UserContext } from '../../../shared/infrastructure/security/user-context';
 import { InvitationCommandAssembler } from './assemblers/invitation-command.assembler';
-import { InvitationService } from 'src/organizations/application/services/invitation.service';
-import { InvitationId } from 'src/organizations/domain/model/valueobjects/invitation-id';
+import { InvitationService } from '../../application/services/invitation.service';
+import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
 
 @Controller('/api/v1/invitations/:invitationId')
 @ApiTags('Invitations')
