@@ -1,18 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Member } from '../domain/model/member.entity';
-import { GetMemberByUserIdAndOrganizationIdQuery } from '../domain/model/queries/get-member-by-user-id-and-organization-id.query';
-import { UserIsNotMemberOfOrganizationException } from '../domain/exceptions/user-is-not-member-of-organization.exception';
-import { GetOrganizationMembersQuery } from '../domain/model/queries/get-organization-members.query';
-import { UpdateMemberCommand } from '../domain/model/commands/update-member.command';
-import { GetMemberByIdQuery } from '../domain/model/queries/get-member-by-id.query';
-import { MemberNotFoundException } from '../domain/exceptions/member-not-found.exception';
+import { Member } from '../../domain/model/member.entity';
+import { GetMemberByUserIdAndOrganizationIdQuery } from '../../domain/model/queries/get-member-by-user-id-and-organization-id.query';
+import { UserIsNotMemberOfOrganizationException } from '../../domain/exceptions/user-is-not-member-of-organization.exception';
+import { GetOrganizationMembersQuery } from '../../domain/model/queries/get-organization-members.query';
+import { UpdateMemberCommand } from '../../domain/model/commands/update-member.command';
+import { GetMemberByIdQuery } from '../../domain/model/queries/get-member-by-id.query';
+import { MemberNotFoundException } from '../../domain/exceptions/member-not-found.exception';
 import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
-import { InvalidUpdateMemberRequestException } from '../domain/exceptions/invalid-update-member-request.exception';
-import { EnrollMemberToOrganizationCommand } from '../domain/model/commands/enroll-member-to-organization.command';
-import { MemberId } from '../domain/model/valueobjects/member-id';
-import { MemberName } from '../domain/model/valueobjects/member-name';
+import { InvalidUpdateMemberRequestException } from '../../domain/exceptions/invalid-update-member-request.exception';
+import { EnrollMemberToOrganizationCommand } from '../../domain/model/commands/enroll-member-to-organization.command';
+import { MemberId } from '../../domain/model/valueobjects/member-id';
+import { MemberName } from '../../domain/model/valueobjects/member-name';
 
 @Injectable()
 export class MemberService {

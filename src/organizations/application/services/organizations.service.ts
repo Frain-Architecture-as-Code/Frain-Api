@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateOrganizationCommand } from '../domain/model/commands/create-organization.command';
-import { OrganizationId } from '../domain/model/valueobjects/organization-id';
+import { CreateOrganizationCommand } from '../../domain/model/commands/create-organization.command';
+import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Organization } from '../domain/model/organization.entity';
+import { Organization } from '../../domain/model/organization.entity';
 import { Repository } from 'typeorm';
-import { MemberId } from '../domain/model/valueobjects/member-id';
-import { GetOrganizationByIdQuery } from '../domain/model/queries/get-organization-by-id.query';
-import { Member } from '../domain/model/member.entity';
-import { MemberName } from '../domain/model/valueobjects/member-name';
-import { GetUserOrganizationsQuery } from '../domain/model/queries/get-user-organizations.query';
-import { DeleteOrganizationCommand } from '../domain/model/commands/delete-organization.command';
+import { MemberId } from '../../domain/model/valueobjects/member-id';
+import { GetOrganizationByIdQuery } from '../../domain/model/queries/get-organization-by-id.query';
+import { Member } from '../../domain/model/member.entity';
+import { MemberName } from '../../domain/model/valueobjects/member-name';
+import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
+import { DeleteOrganizationCommand } from '../../domain/model/commands/delete-organization.command';
 import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
-import { UpdateOrganizationCommand } from '../domain/model/commands/update-organization.command';
+import { UpdateOrganizationCommand } from '../../domain/model/commands/update-organization.command';
 import { MemberService } from './member.service';
-import { OrganizationNotFoundException } from '../domain/exceptions/organization-not-found.exception';
-import { MemberRole } from '../domain/model/valueobjects/member-role';
+import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
+import { MemberRole } from '../../domain/model/valueobjects/member-role';
 
 @Injectable()
 export class OrganizationsService {

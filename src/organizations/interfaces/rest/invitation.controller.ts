@@ -4,10 +4,10 @@ import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { InvitationResponse } from './responses/invitation.response';
 import { InvitationCommandAssembler } from './assemblers/invitation-command.assembler';
-import { InvitationService } from 'src/organizations/application/invitation.service';
+import { InvitationService } from 'src/organizations/application/services/invitation.service';
 import { InvitationAssembler } from './assemblers/invitation.assembler';
 import { InvitationQueryAssembler } from './assemblers/invitation-query.assembler';
-import { MemberService } from 'src/organizations/application/member.service';
+import { MemberService } from 'src/organizations/application/services/member.service';
 
 @UseGuards(AuthGuard)
 @Controller('/api/v1/organizations/:organizationId/invitations')

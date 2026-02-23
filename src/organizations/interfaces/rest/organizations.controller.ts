@@ -12,13 +12,13 @@ import { CreateOrganizationRequest } from './requests/create-organization.reques
 import { OrganizationCommandAssembler } from './assemblers/organization-command.assembler';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { AuthGuard } from 'src/shared/infrastructure/security/auth.guard';
-import { OrganizationsService } from 'src/organizations/application/organizations.service';
+import { OrganizationsService } from 'src/organizations/application/services/organizations.service';
 import { OrganizationAssembler } from './assemblers/organization.assembler';
 import { OrganizationQueryAssembler } from './assemblers/organization-query.assembler';
 import { OrganizationResponse } from './responses/organization.response';
 import { OrganizationId } from 'src/organizations/domain/model/valueobjects/organization-id';
 import { UpdateOrganizationRequest } from './requests/update-organization.request';
-import { MemberService } from 'src/organizations/application/member.service';
+import { MemberService } from 'src/organizations/application/services/member.service';
 import { MemberQueryAssembler } from './assemblers/member-query.assembler';
 
 @UseGuards(AuthGuard)

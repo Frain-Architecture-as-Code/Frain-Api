@@ -7,7 +7,7 @@ import {
     Patch,
     UseGuards,
 } from '@nestjs/common';
-import { MemberService } from 'src/organizations/application/member.service';
+import { MemberService } from 'src/organizations/application/services/member.service';
 import { UserContext } from 'src/shared/infrastructure/security/user-context';
 import { MemberQueryAssembler } from './assemblers/member-query.assembler';
 import { MemberResponse } from './responses/member.response';

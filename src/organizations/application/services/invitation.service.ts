@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Invitation } from '../domain/model/invitation.entity';
+import { Invitation } from '../../domain/model/invitation.entity';
 import { Repository } from 'typeorm';
-import { getInvitationsByOrganizationIdQuery } from '../domain/model/queries/get-invitations-by-organization-id.query';
-import { SendInvitationCommand } from '../domain/model/commands/send-invitation.command';
-import { MemberService } from './member.service';
+import { getInvitationsByOrganizationIdQuery } from '../../domain/model/queries/get-invitations-by-organization-id.query';
+import { SendInvitationCommand } from '../../domain/model/commands/send-invitation.command';
 import { InsufficientPermissionException } from 'src/shared/domain/exceptions/insufficient-permission.exception';
-import { InvitationId } from '../domain/model/valueobjects/invitation-id';
+import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
+import { MemberService } from './member.service';
 
 @Injectable()
 export class InvitationService {
