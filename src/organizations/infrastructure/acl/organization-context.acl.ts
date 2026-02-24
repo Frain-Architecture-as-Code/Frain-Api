@@ -20,4 +20,16 @@ export class OrganizationContextAcl {
 
         return exists;
     }
+
+    async canCreateProject(userId: string, organizationId: string) {
+        const member =
+            await this.memberService.getMemberByUserIdAndOrganizationId(
+                MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
+                    UserId.fromString(userId),
+                    organizationId,
+                ),
+            );
+
+        return member.canCreateProject();
+    }
 }

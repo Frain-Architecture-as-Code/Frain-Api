@@ -30,8 +30,25 @@ export class Project extends AuditableEntity {
 
     @Column({
         type: 'jsonb',
-        nullable: false,
+        nullable: true,
         transformer: createC4ModelTransformer(),
     })
-    c4Model: C4Model;
+    c4Model: C4Model | null;
+
+    static create(props: {
+        id: ProjectId;
+        organizationId: OrganizationId;
+        visibility: ProjectVisibility;
+    }) {
+        const project = new Project();
+        project.id = props.id;
+        project.organizationId = props.organizationId;
+        project.visibility = props.visibility;
+        project.c4Model = null;
+        return project;
+    }
+
+    public update(props: { visibility: ProjectVisibility }) {
+        this.visibility = props.visibility;
+    }
 }
