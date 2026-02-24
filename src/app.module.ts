@@ -28,6 +28,7 @@ import { Member } from './organizations/domain/model/member.entity';
 import { Invitation } from './organizations/domain/model/invitation.entity';
 import { HealthController } from './shared/interfaces/rest/health.controller';
 import { Project } from './projects/domain/model/project.entity';
+import { ProjectApiKeyEntity } from './projects/domain/model/project-api-key.entity';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -67,7 +68,13 @@ class HttpExceptionFilter extends BaseExceptionFilter {
                 password: config.get<string>('DB_PASSWORD'),
                 database: config.get<string>('DB_NAME'),
                 ssl: !!!config.get<boolean>('DB_SSL'),
-                entities: [Organization, Member, Invitation, Project],
+                entities: [
+                    Organization,
+                    Member,
+                    Invitation,
+                    Project,
+                    ProjectApiKeyEntity,
+                ],
                 synchronize: true,
             }),
         }),

@@ -8,10 +8,11 @@ import { ProjectsService } from './application/services/projects.service';
 import { OrganizationsModule } from '../organizations/organizations.module';
 import { SharedModule } from '../shared/shared.module';
 import { OrganizationContextAcl } from '../organizations/infrastructure/acl/organization-context.acl';
+import { ProjectApiKeyEntity } from './domain/model/project-api-key.entity';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Project]),
+        TypeOrmModule.forFeature([Project, ProjectApiKeyEntity]),
         OrganizationsModule, // usa MemberService
         SharedModule,
     ],
