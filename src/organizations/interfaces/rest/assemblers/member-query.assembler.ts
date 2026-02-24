@@ -2,6 +2,7 @@ import { GetMemberByUserIdAndOrganizationIdQuery } from '../../../domain/model/q
 import { GetOrganizationMembersQuery } from '../../../domain/model/queries/get-organization-members.query';
 import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
 import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
+import { ExistsUserInOrganizationQuery } from '../../../domain/model/queries/exists-user-in-organization.query';
 
 export class MemberQueryAssembler {
     static toGetMemberByUserIdAndOrganizationIdQuery(
@@ -19,6 +20,16 @@ export class MemberQueryAssembler {
         userId: UserId,
     ): GetOrganizationMembersQuery {
         return new GetOrganizationMembersQuery(
+            OrganizationId.fromString(organizationId),
+            userId,
+        );
+    }
+
+    static toExistsUserInOrganizationQuery(
+        organizationId: string,
+        userId: UserId,
+    ): ExistsUserInOrganizationQuery {
+        return new ExistsUserInOrganizationQuery(
             OrganizationId.fromString(organizationId),
             userId,
         );
