@@ -6,7 +6,10 @@ import { ContainerInfo } from '../../domain/model/valueobjects/container-info';
 
 export const createC4ModelTransformer = () => {
     return {
-        to: (value: C4Model): any => {
+        to: (value: C4Model | null): any => {
+            if (value === null) {
+                return null;
+            }
             return {
                 title: value.title,
                 description: value.description,
@@ -14,7 +17,10 @@ export const createC4ModelTransformer = () => {
                 views: value.views,
             };
         },
-        from: (value: C4Model): C4Model => {
+        from: (value: C4Model | null): C4Model | null => {
+            if (value === null) {
+                return null;
+            }
             return new C4Model(
                 value.title,
                 value.description,

@@ -66,7 +66,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
                 username: config.get<string>('DB_USER'),
                 password: config.get<string>('DB_PASSWORD'),
                 database: config.get<string>('DB_NAME'),
-                ssl: config.get<boolean>('DB_SSL'),
+                ssl: !!!config.get<boolean>('DB_SSL'),
                 entities: [Organization, Member, Invitation, Project],
                 synchronize: true,
             }),
