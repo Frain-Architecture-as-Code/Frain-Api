@@ -91,6 +91,9 @@ export class ProjectApiKeysService {
             memberId: command.memberId,
             projectId: command.projectId,
         });
+
+        await this.projectApiKeyRepository.save(apiKey);
+
         return apiKey;
     }
 
