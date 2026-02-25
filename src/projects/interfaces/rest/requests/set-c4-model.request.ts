@@ -44,7 +44,7 @@ const frainViewSchema = z.object({
 const setC4ModelRequestSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().min(1, 'Description is required'),
-    updatedAt: z.iso.date(),
+    updatedAt: z.iso.datetime(),
     views: z.array(frainViewSchema),
 });
 
