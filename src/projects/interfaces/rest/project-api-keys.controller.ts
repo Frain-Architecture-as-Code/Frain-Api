@@ -15,6 +15,8 @@ import { ProjectApiKeysService } from '../../application/services/project-api-ke
 import { ProjectApiKeyAssembler } from './assembler/project-api-key.assembler';
 import { CreateProjectApiKeyRequest } from './requests/create-project-api-key.request';
 import { ProjectApiKeyCommandAssembler } from './assembler/project-api-key-command.assembler';
+import { RevokeApiKeyResponse } from './responses/revoke-api-key.response';
+import { ProjectApiKeyResponseAssembler } from './assembler/project-api.key-response.assembler';
 
 @UseGuards(AuthGuard)
 @Controller(
@@ -77,10 +79,10 @@ export class ProjectApiKeysController {
         @Param(':organizationId') organizationId: string,
         @Param(':projectId') projectId: string,
         @Param(':projectApiKeyId') projectApiKeyId: string,
-    ) {
+    ): Promise<RevokeApiKeyResponse> {
         const user = this.userContext.user;
 
-        var command =
+        const command =
             ProjectApiKeyCommandAssembler.toRevokeProjectApiKeyCommand(
                 organizationId,
                 projectId,
@@ -88,6 +90,14 @@ export class ProjectApiKeysController {
                 user,
             );
 
-        await this.projectApiKeysService.revokeProjectApiKey(command);
+        const result =
+            await this.projectApiKeysService.revokeProjectApiKey(command);
+
+        const response =
+            ProjectApiKeyResponseAssembler.toRevokeProjectApiKeyResponse(
+                result,
+            );
+
+        return response;
     }
 }

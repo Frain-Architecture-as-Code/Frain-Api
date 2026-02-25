@@ -5,6 +5,7 @@ import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
 import { ExistsUserInOrganizationQuery } from '../../../domain/model/queries/exists-user-in-organization.query';
 import { ExistsMemberInOrganizationQuery } from '../../../domain/model/queries/exists-member-in-organization.query';
 import { MemberId } from '../../../domain/model/valueobjects/member-id';
+import { GetMemberByIdQuery } from '../../../domain/model/queries/get-member-by-id.query';
 
 export class MemberQueryAssembler {
     static toGetMemberByUserIdAndOrganizationIdQuery(
@@ -45,5 +46,9 @@ export class MemberQueryAssembler {
             MemberId.fromString(memberId),
             OrganizationId.fromString(organizationId),
         );
+    }
+
+    static toGetMemberByIdQuery(memberId: string): GetMemberByIdQuery {
+        return new GetMemberByIdQuery(MemberId.fromString(memberId));
     }
 }

@@ -79,4 +79,12 @@ export class OrganizationContextAcl {
         );
         return member;
     }
+
+    async getMemberRoleByMemberId(memberId: string): Promise<MemberRole> {
+        const member = await this.memberService.getMemberById(
+            MemberQueryAssembler.toGetMemberByIdQuery(memberId),
+        );
+
+        return member.role;
+    }
 }

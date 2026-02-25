@@ -57,7 +57,7 @@ export class MemberService {
         return member !== null;
     }
 
-    async getMemberById(query: GetMemberByIdQuery) {
+    async getMemberById(query: GetMemberByIdQuery): Promise<Member> {
         const member = await this.memberRepository.findOne({
             where: {
                 id: query.memberId,

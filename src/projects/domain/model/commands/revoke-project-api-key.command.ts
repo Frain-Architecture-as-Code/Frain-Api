@@ -7,7 +7,7 @@ export class RevokeProjectApiKeyCommand {
     constructor(
         public readonly organizationId: OrganizationId,
         public readonly projectId: ProjectId,
-        public readonly projectApiKey: ProjectApiKeyId,
+        public readonly projectApiKeyId: ProjectApiKeyId,
         public readonly user: User,
     ) {}
 }

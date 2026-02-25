@@ -10,6 +10,9 @@ import { CreateProjectApiKeyCommand } from '../../domain/model/commands/create-p
 import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { ProjectApiKeyId } from '../../domain/model/valueobjects/project-api-key-id';
 import { ApiKeySecret } from '../../domain/model/valueobjects/api-key-secret';
+import { RevokeProjectApiKeyCommand } from '../../domain/model/commands/revoke-project-api-key.command';
+import { GetProjectApiKeyByIdQuery } from '../../domain/model/queries/get-project-api-key-by-id.query';
+import { ProjectApiKeyNotFoundException } from '../../domain/exceptions/project-api-key-not-found.exception';
 
 @Injectable()
 export class ProjectApiKeysService {
@@ -89,5 +92,74 @@ export class ProjectApiKeysService {
             projectId: command.projectId,
         });
         return apiKey;
+    }
+
+    async getProjectApiKeyById(
+        query: GetProjectApiKeyByIdQuery,
+    ): Promise<ProjectApiKey> {
+        const apiKey = await this.projectApiKeyRepository.findOneBy({
+            id: query.id,
+        });
+
+        if (!apiKey) {
+            throw new NotFoundException('API key not found');
+        }
+
+        return apiKey;
+    }
+
+    async revokeProjectApiKey(
+        command: RevokeProjectApiKeyCommand,
+    ): Promise<ProjectApiKeyId> {
+        // this also validates if the user is part of the organization
+        const currentMemberRole =
+            await this.organizationContextAcl.getMemberRoleByUserIdAndOrganizationId(
+                command.user.id.toString(),
+                command.organizationId.toString(),
+            );
+
+        if (currentMemberRole === MemberRole.CONTRIBUTOR) {
+            throw new InsufficientPermissionException(
+                'User does not have sufficient permissions to revoke a project API key.',
+            );
+        }
+
+        const projectApiKey = await this.projectApiKeyRepository.findOne({
+            where: {
+                id: command.projectApiKeyId,
+                projectId: command.projectId,
+            },
+        });
+
+        if (!projectApiKey) {
+            throw new ProjectApiKeyNotFoundException(command.projectApiKeyId);
+        }
+
+        const targetMemberRole =
+            await this.organizationContextAcl.getMemberRoleByMemberId(
+                projectApiKey.memberId.toString(),
+            );
+
+        if (
+            targetMemberRole === MemberRole.OWNER &&
+            currentMemberRole !== MemberRole.OWNER
+        ) {
+            throw new InsufficientPermissionException(
+                'User does not have sufficient permissions to revoke a project API key from the owner.',
+            );
+        }
+
+        if (
+            targetMemberRole === MemberRole.ADMIN &&
+            currentMemberRole === MemberRole.ADMIN
+        ) {
+            throw new InsufficientPermissionException(
+                'User does not have sufficient permissions to revoke a project API key from an admin.',
+            );
+        }
+
+        await this.projectApiKeyRepository.remove(projectApiKey);
+
+        return projectApiKey.id;
     }
 }
