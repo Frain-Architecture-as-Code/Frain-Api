@@ -8,7 +8,7 @@ export class ProjectApiKeyAssembler {
         return {
             id: projectApiKey.id.toString(),
             projectId: projectApiKey.projectId.toString(),
-            apiKey: projectApiKey.apiKeySecret.toString(),
+            apiKeySecret: projectApiKey.apiKeySecret.toString(),
             lastUsedAt: projectApiKey.lastUsedAt,
             memberId: projectApiKey.memberId.toString(),
             createdAt: projectApiKey.createdAt,
