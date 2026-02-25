@@ -9,6 +9,7 @@ export class ProjectApiKeyQueryAssembler {
         projectId: string,
         user: User,
     ): GetApiKeysQuery {
+        console.log('Creating GetApiKeysQuery');
         return new GetApiKeysQuery(
             OrganizationId.fromString(organizationId),
             ProjectId.fromString(projectId),

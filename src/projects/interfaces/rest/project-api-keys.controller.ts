@@ -30,8 +30,8 @@ export class ProjectApiKeysController {
 
     @Get()
     async getProjectApiKeys(
-        @Param(':organizationId') organizationId: string,
-        @Param(':projectId') projectId: string,
+        @Param('organizationId') organizationId: string,
+        @Param('projectId') projectId: string,
     ): Promise<ProjectApiKeyResponse[]> {
         const user = this.userContext.user;
 
@@ -52,8 +52,8 @@ export class ProjectApiKeysController {
 
     @Post()
     async createApiKey(
-        @Param(':organizationId') organizationId: string,
-        @Param(':projectId') projectId: string,
+        @Param('organizationId') organizationId: string,
+        @Param('projectId') projectId: string,
         @Body() request: CreateProjectApiKeyRequest,
     ): Promise<ProjectApiKeyResponse> {
         const user = this.userContext.user;
@@ -76,9 +76,9 @@ export class ProjectApiKeysController {
 
     @Delete('/:projectApiKeyId')
     async revokeApiKey(
-        @Param(':organizationId') organizationId: string,
-        @Param(':projectId') projectId: string,
-        @Param(':projectApiKeyId') projectApiKeyId: string,
+        @Param('organizationId') organizationId: string,
+        @Param('projectId') projectId: string,
+        @Param('projectApiKeyId') projectApiKeyId: string,
     ): Promise<RevokeApiKeyResponse> {
         const user = this.userContext.user;
 
