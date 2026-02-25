@@ -11,6 +11,8 @@ import { OrganizationContextAcl } from '../organizations/infrastructure/acl/orga
 import { ProjectApiKey } from './domain/model/project-api-key.entity';
 import { ProjectApiKeysController } from './interfaces/rest/project-api-keys.controller';
 import { ProjectApiKeysService } from './application/services/project-api-keys.service';
+import { C4ModelController } from './interfaces/rest/c4-model.controller';
+import { ApiKeyGuard } from './infrastructure/security/api-key.guard';
 
 @Module({
     imports: [
@@ -18,7 +20,16 @@ import { ProjectApiKeysService } from './application/services/project-api-keys.s
         OrganizationsModule, // usa MemberService
         SharedModule,
     ],
-    controllers: [ProjectsController, ProjectApiKeysController],
-    providers: [ProjectsService, OrganizationContextAcl, ProjectApiKeysService],
+    controllers: [
+        ProjectsController,
+        ProjectApiKeysController,
+        C4ModelController,
+    ],
+    providers: [
+        ProjectsService,
+        OrganizationContextAcl,
+        ProjectApiKeysService,
+        ApiKeyGuard,
+    ],
 })
 export class ProjectsModule {}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Project } from '../../domain/model/project.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,9 +12,13 @@ import { ProjectId } from '../../domain/model/valueobjects/project-id';
 import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
 import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
 import { UpdateProjectCommand } from '../../domain/model/commands/update-project.command';
+import { SetC4ModelCommand } from '../../domain/model/commands/set-c4-model.command';
+import { UpdateNodePositionCommand } from '../../domain/model/commands/update-node-position.command';
 
 @Injectable()
 export class ProjectsService {
+    private readonly logger = new Logger(ProjectsService.name);
+
     constructor(
         @InjectRepository(Project)
         private projectRepository: Repository<Project>,
@@ -127,5 +131,71 @@ export class ProjectsService {
         await this.projectRepository.save(project);
 
         return project.id;
+    }
+
+    /**
+     * Gets a project by ID without organization/permission checks.
+     * Used by C4 model endpoints that authenticate via API Key.
+     */
+    async getProjectByIdRaw(projectId: ProjectId): Promise<Project> {
+        const project = await this.projectRepository.findOne({
+            where: { id: projectId },
+        });
+
+        if (project === null) {
+            throw new ProjectNotFoundException(projectId);
+        }
+
+        return project;
+    }
+
+    /**
+     * Sets/replaces the entire C4 model for a project.
+     * Used by the SDK endpoint.
+     */
+    async setC4Model(command: SetC4ModelCommand): Promise<ProjectId> {
+        const project = await this.projectRepository.findOne({
+            where: { id: command.projectId },
+        });
+
+        if (!project) {
+            throw new ProjectNotFoundException(command.projectId);
+        }
+
+        project.updateC4Model(command.c4Model);
+        await this.projectRepository.save(project);
+
+        this.logger.log(
+            `Updated C4Model for project: ${command.projectId.toString()}`,
+        );
+
+        return project.id;
+    }
+
+    /**
+     * Updates a node's position within a view.
+     */
+    async updateNodePosition(
+        command: UpdateNodePositionCommand,
+    ): Promise<void> {
+        const project = await this.projectRepository.findOne({
+            where: { id: command.projectId },
+        });
+
+        if (!project) {
+            throw new ProjectNotFoundException(command.projectId);
+        }
+
+        project.updateNodePosition(
+            command.viewId,
+            command.nodeId,
+            command.x,
+            command.y,
+        );
+        await this.projectRepository.save(project);
+
+        this.logger.log(
+            `Updated node ${command.nodeId} position in view ${command.viewId} for project: ${command.projectId.toString()}`,
+        );
     }
 }
