@@ -15,6 +15,7 @@ import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { MemberName } from '../../domain/model/valueobjects/member-name';
 import { ExistsUserInOrganizationQuery } from '../../domain/model/queries/exists-user-in-organization.query';
 import { MemberAlreadyExistsException } from '../../domain/exceptions/member-already-exists.exception';
+import { ExistsMemberInOrganizationQuery } from '../../domain/model/queries/exists-member-in-organization.query';
 
 @Injectable()
 export class MemberService {
@@ -167,5 +168,17 @@ export class MemberService {
         await this.memberRepository.save(member);
 
         return member.id;
+    }
+
+    async existsMemberInOrganization(
+        query: ExistsMemberInOrganizationQuery,
+    ): Promise<boolean> {
+        const member = await this.memberRepository.exists({
+            where: {
+                id: query.memberId,
+                organizationId: query.organizationId,
+            },
+        });
+        return member;
     }
 }

@@ -66,4 +66,17 @@ export class OrganizationContextAcl {
 
         return member.id.toString();
     }
+
+    async existsMemberInOrganization(
+        memberId: string,
+        organizationId: string,
+    ): Promise<boolean> {
+        const member = await this.memberService.existsMemberInOrganization(
+            MemberQueryAssembler.toExistsMemberInOrganizationQuery(
+                organizationId,
+                memberId,
+            ),
+        );
+        return member;
+    }
 }

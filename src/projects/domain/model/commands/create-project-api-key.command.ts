@@ -3,7 +3,7 @@ import { MemberId } from '../valueobjects/member-id';
 import { OrganizationId } from '../valueobjects/organization-id';
 import { ProjectId } from '../valueobjects/project-id';
 
-export class CreateApiKeyCommand {
+export class CreateProjectApiKeyCommand {
     constructor(
         public readonly organizationId: OrganizationId,
         public readonly projectId: ProjectId,
