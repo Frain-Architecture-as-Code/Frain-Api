@@ -3,11 +3,11 @@ import { ProjectApiKeyId } from './valueobjects/project-api-key-id';
 import { createValueObjectTransformer } from '../../../shared/infrastructure/persistence/typeorm/transformers';
 import { ProjectId } from './valueobjects/project-id';
 import { MemberId } from './valueobjects/member-id';
-import { ApiKey } from './valueobjects/api-key';
+import { ApiKeySecret } from './valueobjects/api-key-secret';
 import { AuditableEntity } from '../../../shared/domain/model/auditable-entity';
 
 @Entity()
-export class ProjectApiKeyEntity extends AuditableEntity {
+export class ProjectApiKey extends AuditableEntity {
     @PrimaryColumn({
         type: 'uuid',
         nullable: false,
@@ -35,9 +35,9 @@ export class ProjectApiKeyEntity extends AuditableEntity {
         length: 128,
         nullable: false,
         unique: true,
-        transformer: createValueObjectTransformer(ApiKey),
+        transformer: createValueObjectTransformer(ApiKeySecret),
     })
-    apiKey: ApiKey;
+    apiKeySecret: ApiKeySecret;
 
     @Column({
         type: 'timestamp',
@@ -49,13 +49,28 @@ export class ProjectApiKeyEntity extends AuditableEntity {
         id: ProjectApiKeyId;
         projectId: ProjectId;
         memberId: MemberId;
-        apiKey: ApiKey;
+        apiKeySecret: ApiKeySecret;
     }) {
-        const entity = new ProjectApiKeyEntity();
+        const entity = new ProjectApiKey();
         entity.id = params.id;
         entity.projectId = params.projectId;
         entity.memberId = params.memberId;
-        entity.apiKey = params.apiKey;
+        entity.apiKeySecret = params.apiKeySecret;
+        return entity;
+    }
+
+    public hideSecret(): ProjectApiKey {
+        const entity = ProjectApiKey.create({
+            id: this.id,
+            projectId: this.projectId,
+            memberId: this.memberId,
+            apiKeySecret: ApiKeySecret.redacted(),
+        });
+
+        entity.lastUsedAt = this.lastUsedAt;
+        entity.createdAt = this.createdAt;
+        entity.updatedAt = this.updatedAt;
+
         return entity;
     }
 }

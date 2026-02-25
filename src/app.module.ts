@@ -28,7 +28,7 @@ import { Member } from './organizations/domain/model/member.entity';
 import { Invitation } from './organizations/domain/model/invitation.entity';
 import { HealthController } from './shared/interfaces/rest/health.controller';
 import { Project } from './projects/domain/model/project.entity';
-import { ProjectApiKeyEntity } from './projects/domain/model/project-api-key.entity';
+import { ProjectApiKey } from './projects/domain/model/project-api-key.entity';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -73,7 +73,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
                     Member,
                     Invitation,
                     Project,
-                    ProjectApiKeyEntity,
+                    ProjectApiKey,
                 ],
                 synchronize: true,
             }),

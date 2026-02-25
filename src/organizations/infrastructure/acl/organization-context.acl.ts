@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MemberService } from '../../application/services/member.service';
 import { MemberQueryAssembler } from '../../interfaces/rest/assemblers/member-query.assembler';
 import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
+import { MemberRole } from '../../domain/model/valueobjects/member-role';
 
 @Injectable()
 export class OrganizationContextAcl {
@@ -21,7 +22,10 @@ export class OrganizationContextAcl {
         return exists;
     }
 
-    async canCreateProject(userId: string, organizationId: string) {
+    async canCreateProject(
+        userId: string,
+        organizationId: string,
+    ): Promise<boolean> {
         const member =
             await this.memberService.getMemberByUserIdAndOrganizationId(
                 MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
@@ -31,5 +35,35 @@ export class OrganizationContextAcl {
             );
 
         return member.canCreateProject();
+    }
+
+    async getMemberRoleByUserIdAndOrganizationId(
+        userId: string,
+        organizationId: string,
+    ): Promise<MemberRole> {
+        const member =
+            await this.memberService.getMemberByUserIdAndOrganizationId(
+                MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
+                    UserId.fromString(userId),
+                    organizationId,
+                ),
+            );
+
+        return member.role;
+    }
+
+    async getMemberIdByUserIdAndOrganizationId(
+        userId: string,
+        organizationId: string,
+    ): Promise<string> {
+        const member =
+            await this.memberService.getMemberByUserIdAndOrganizationId(
+                MemberQueryAssembler.toGetMemberByUserIdAndOrganizationIdQuery(
+                    UserId.fromString(userId),
+                    organizationId,
+                ),
+            );
+
+        return member.id.toString();
     }
 }
