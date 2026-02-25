@@ -11,13 +11,13 @@ const containerInfoSchema = z.object({
 
 const frainNodeSchema = z.object({
     id: z.string().min(1, 'Node ID is required'),
-    type: z.nativeEnum(NodeType, {
+    type: z.enum(NodeType, {
         message: 'Node type is required',
     }),
     name: z.string().min(1, 'Node name is required'),
     description: z.string().min(1, 'Node description is required'),
     technology: z.string().min(1, 'Node technology is required'),
-    viewId: z.string().optional(),
+    viewId: z.string().nullable(),
     x: z.number(),
     y: z.number(),
 });
@@ -31,11 +31,11 @@ const frainRelationSchema = z.object({
 
 const frainViewSchema = z.object({
     id: z.string().min(1, 'View ID is required'),
-    type: z.nativeEnum(ViewType, {
+    type: z.enum(ViewType, {
         message: 'View type is required',
     }),
     container: containerInfoSchema.nullable().optional(),
-    name: z.string().min(1, 'View name is required'),
+    name: z.string(),
     nodes: z.array(frainNodeSchema),
     externalNodes: z.array(frainNodeSchema),
     relations: z.array(frainRelationSchema),
@@ -44,8 +44,8 @@ const frainViewSchema = z.object({
 const setC4ModelRequestSchema = z.object({
     title: z.string().min(1, 'Title is required'),
     description: z.string().min(1, 'Description is required'),
-    updatedAt: z.string().min(1, 'Updated date is required'),
-    views: z.array(frainViewSchema).min(1, 'At least one view is required'),
+    updatedAt: z.iso.date(),
+    views: z.array(frainViewSchema),
 });
 
 export class SetC4ModelRequest extends createZodDto(setC4ModelRequestSchema) {}
