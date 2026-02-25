@@ -83,17 +83,10 @@ export class ApiKeyGuard implements CanActivate {
             }
         }
 
-        // Attach API key context to request for downstream use
-        (request as any).apiKeyContext = {
-            projectId: projectApiKey.projectId,
-            memberId: projectApiKey.memberId.toString(),
-            apiKeyId: projectApiKey.id.toString(),
-        } as ApiKeyContext;
-
         // Record API key usage (fire and forget)
-        this.recordUsage(projectApiKey).catch((err) => {
+        this.recordUsage(projectApiKey).catch(() => {
             this.logger.warn(
-                `Failed to record API key usage for key ${projectApiKey.id.toString()}: ${err.message}`,
+                `Failed to record API key usage for key ${projectApiKey.id.toString()}`,
             );
         });
 
