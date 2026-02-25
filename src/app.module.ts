@@ -29,6 +29,7 @@ import { Invitation } from './organizations/domain/model/invitation.entity';
 import { HealthController } from './shared/interfaces/rest/health.controller';
 import { Project } from './projects/domain/model/project.entity';
 import { ProjectApiKey } from './projects/domain/model/project-api-key.entity';
+import { Notification } from './notifications/domain/model/notification.entity';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -74,6 +75,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
                     Invitation,
                     Project,
                     ProjectApiKey,
+                    Notification,
                 ],
                 synchronize: true,
             }),
