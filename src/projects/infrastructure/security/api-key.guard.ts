@@ -13,7 +13,7 @@ import { ProjectApiKey } from '../../domain/model/project-api-key.entity';
 import { ApiKeySecret } from '../../domain/model/valueobjects/api-key-secret';
 import { ProjectId } from '../../domain/model/valueobjects/project-id';
 
-export const API_KEY_HEADER = 'frain-api-key';
+export const API_KEY_HEADER = 'Frain-Api-Key';
 
 export interface ApiKeyContext {
     projectId: ProjectId;
@@ -32,14 +32,14 @@ export class ApiKeyGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest<Request>();
-        const rawHeader = request.headers[API_KEY_HEADER];
+        const rawHeader = request.headers[API_KEY_HEADER.toLowerCase()];
         const apiKeyHeader = Array.isArray(rawHeader)
             ? rawHeader[0]
             : rawHeader;
 
         if (!apiKeyHeader || apiKeyHeader.trim() === '') {
             this.logger.debug(
-                `No API key header found for SDK endpoint: ${request.url}`,
+                `No API key header found for SDK endpoint: ${request.url} - Looking for ${API_KEY_HEADER} header`,
             );
             throw new UnauthorizedException('Missing Frain-Api-Key header');
         }
