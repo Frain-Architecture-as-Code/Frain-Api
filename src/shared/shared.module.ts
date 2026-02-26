@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthGuard } from './infrastructure/security/auth.guard';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from './infrastructure/security/auth.guard';
+import { UserContext } from './infrastructure/security/user-context';
 
 @Module({
     imports: [
@@ -13,7 +14,7 @@ import { ConfigService } from '@nestjs/config';
             }),
         }),
     ],
-    providers: [AuthGuard],
-    exports: [AuthGuard, JwtModule],
+    providers: [AuthGuard, UserContext],
+    exports: [AuthGuard, JwtModule, UserContext],
 })
 export class SharedModule {}
