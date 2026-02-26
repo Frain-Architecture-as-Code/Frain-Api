@@ -1,0 +1,9 @@
+export enum NodeType {
+    PERSON = 'PERSON',
+    SYSTEM = 'SYSTEM',
+    EXTERNAL_SYSTEM = 'EXTERNAL_SYSTEM',
+    DATABASE = 'DATABASE',
+    WEB_APP = 'WEB_APP',
+    CONTAINER = 'CONTAINER',
+    COMPONENT = 'COMPONENT',
+}
