@@ -13,6 +13,8 @@ import { ProjectApiKeysController } from './interfaces/rest/project-api-keys.con
 import { ProjectApiKeysService } from './application/services/project-api-keys.service';
 import { C4ModelController } from './interfaces/rest/c4-model.controller';
 import { ApiKeyGuard } from './infrastructure/security/api-key.guard';
+import { ProjectRepository } from './infrastructure/persistence/repositories/project.repository';
+import { ProjectApiKeyRepository } from './infrastructure/persistence/repositories/project-api-key.repository';
 
 @Module({
     imports: [
@@ -30,6 +32,8 @@ import { ApiKeyGuard } from './infrastructure/security/api-key.guard';
         OrganizationContextAcl,
         ProjectApiKeysService,
         ApiKeyGuard,
+        ProjectRepository,
+        ProjectApiKeyRepository,
     ],
 })
 export class ProjectsModule {}
