@@ -37,6 +37,13 @@ export class OrganizationContextAcl {
         return member.canCreateProject();
     }
 
+    async canUpdateProject(
+        userId: string,
+        organizationId: string,
+    ): Promise<boolean> {
+        return await this.canCreateProject(userId, organizationId);
+    }
+
     async getMemberRoleByUserIdAndOrganizationId(
         userId: string,
         organizationId: string,
