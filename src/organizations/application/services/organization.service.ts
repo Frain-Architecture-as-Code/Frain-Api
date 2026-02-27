@@ -1,45 +1,35 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateOrganizationCommand } from '../../domain/model/commands/create-organization.command';
 import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Organization } from '../../domain/model/organization.entity';
-import { Repository } from 'typeorm';
 import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { GetOrganizationByIdQuery } from '../../domain/model/queries/get-organization-by-id.query';
 import { Member } from '../../domain/model/member.entity';
 import { MemberName } from '../../domain/model/valueobjects/member-name';
-import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
 import { DeleteOrganizationCommand } from '../../domain/model/commands/delete-organization.command';
 import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { UpdateOrganizationCommand } from '../../domain/model/commands/update-organization.command';
 import { MemberService } from './member.service';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
 import { MemberRole } from '../../domain/model/valueobjects/member-role';
+import { OrganizationRepository } from '../../infrastructure/persistence/repositories/organization.repository';
+import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
+import { MemberRepository } from '../../infrastructure/persistence/repositories/member.repository';
 
 @Injectable()
 export class OrganizationsService {
     private logger = new Logger(OrganizationsService.name);
 
     constructor(
-        @InjectRepository(Organization)
-        private organizationRepository: Repository<Organization>,
-
-        @InjectRepository(Member)
-        private memberRepository: Repository<Member>,
-
+        private organizationRepository: OrganizationRepository,
+        private memberRepository: MemberRepository,
         private memberService: MemberService,
     ) {}
 
     async getUserOrganizations(query: GetUserOrganizationsQuery) {
-        return this.organizationRepository
-            .createQueryBuilder('org')
-            .innerJoin(
-                Member,
-                'm',
-                'm.organizationId = org.id AND m.userId = :userId',
-                { userId: query.userId.toString() },
-            )
-            .getMany();
+        return await this.organizationRepository.getUserOrganizations(
+            query.userId,
+        );
     }
 
     async createOrganization(
@@ -76,9 +66,10 @@ export class OrganizationsService {
     }
 
     async getById(query: GetOrganizationByIdQuery): Promise<Organization> {
-        const organization = await this.organizationRepository.findOne({
-            where: { id: query.organizationId },
-        });
+        const organization =
+            await this.organizationRepository.getOrganizationById(
+                query.organizationId,
+            );
 
         if (organization === null) {
             throw new OrganizationNotFoundException(query.organizationId);
@@ -105,15 +96,9 @@ export class OrganizationsService {
         this.logger.log(
             `Deleting organization with id ${command.organizationId.toString()}. Performed by ${command.userId.toString()}`,
         );
-        await this.organizationRepository.manager.transaction(
-            async (manager) => {
-                await manager.delete(Member, {
-                    organizationId: command.organizationId,
-                });
-                await manager.delete(Organization, {
-                    id: command.organizationId,
-                });
-            },
+
+        await this.organizationRepository.deleteOrganization(
+            command.organizationId,
         );
 
         return command.organizationId;

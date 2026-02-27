@@ -19,7 +19,7 @@ export class MemberCommandAssembler {
             request.newName
                 ? MemberName.fromString(request.newName)
                 : undefined,
-            request.newRole,
+            request.newRole ? request.newRole : undefined,
         );
     }
 }

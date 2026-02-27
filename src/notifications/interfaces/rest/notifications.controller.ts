@@ -4,7 +4,6 @@ import { UserContext } from '../../../shared/infrastructure/security/user-contex
 import { NotificationsService } from '../../application/services/notifications.service';
 import { GetAllUserNotificationsQuery } from '../../domain/model/queries/get-all-user-notifications.query';
 import { GetNotificationByIdQuery } from '../../domain/model/queries/get-notification-by-id.query';
-import { NotificationNotFoundException } from '../../domain/exceptions/notification-not-found.exception';
 import { NotificationAssembler } from './assembler/notification.assembler';
 import { NotificationCommandAssembler } from './assembler/notification-command.assembler';
 import { UpdateNotificationStatusRequest } from './requests/update-notification-status.request';
@@ -49,10 +48,6 @@ export class NotificationsController {
         const result = await this.notificationsService.getNotificationById(
             new GetNotificationByIdQuery(resultNotificationId),
         );
-
-        if (!result) {
-            throw new NotificationNotFoundException(resultNotificationId);
-        }
 
         return NotificationAssembler.toResponseFromEntity(result);
     }

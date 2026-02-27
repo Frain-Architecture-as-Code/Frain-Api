@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { GetApiKeysQuery as GetProjectApiKeysQuery } from '../../domain/model/queries/get-project-api-keys.query';
 import { ProjectApiKey } from '../../domain/model/project-api-key.entity';
 import { OrganizationContextAcl } from '../../../organizations/infrastructure/acl/organization-context.acl';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { MemberRole } from '../../../organizations/domain/model/valueobjects/member-role';
 import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { CreateProjectApiKeyCommand } from '../../domain/model/commands/create-project-api-key.command';
@@ -13,12 +11,12 @@ import { ApiKeySecret } from '../../domain/model/valueobjects/api-key-secret';
 import { RevokeProjectApiKeyCommand } from '../../domain/model/commands/revoke-project-api-key.command';
 import { GetProjectApiKeyByIdQuery } from '../../domain/model/queries/get-project-api-key-by-id.query';
 import { ProjectApiKeyNotFoundException } from '../../domain/exceptions/project-api-key-not-found.exception';
+import { ProjectApiKeyRepository } from '../../infrastructure/persistence/repositories/project-api-key.repository';
 
 @Injectable()
 export class ProjectApiKeysService {
     constructor(
-        @InjectRepository(ProjectApiKey)
-        private projectApiKeyRepository: Repository<ProjectApiKey>,
+        private projectApiKeyRepository: ProjectApiKeyRepository,
         private readonly organizationContextAcl: OrganizationContextAcl,
     ) {}
 
@@ -38,9 +36,10 @@ export class ProjectApiKeysService {
 
         const currentMemberId = MemberId.fromString(memberIdRaw);
 
-        const projectApiKeys = await this.projectApiKeyRepository.find({
-            where: { projectId: query.projectId },
-        });
+        const projectApiKeys =
+            await this.projectApiKeyRepository.findAllByProjectId(
+                query.projectId,
+            );
 
         if (
             memberRole === MemberRole.ADMIN ||
@@ -100,9 +99,7 @@ export class ProjectApiKeysService {
     async getProjectApiKeyById(
         query: GetProjectApiKeyByIdQuery,
     ): Promise<ProjectApiKey> {
-        const apiKey = await this.projectApiKeyRepository.findOneBy({
-            id: query.id,
-        });
+        const apiKey = await this.projectApiKeyRepository.findById(query.id);
 
         if (!apiKey) {
             throw new NotFoundException('API key not found');
@@ -127,12 +124,9 @@ export class ProjectApiKeysService {
             );
         }
 
-        const projectApiKey = await this.projectApiKeyRepository.findOne({
-            where: {
-                id: command.projectApiKeyId,
-                projectId: command.projectId,
-            },
-        });
+        const projectApiKey = await this.projectApiKeyRepository.findById(
+            command.projectApiKeyId,
+        );
 
         if (!projectApiKey) {
             throw new ProjectApiKeyNotFoundException(command.projectApiKeyId);
@@ -161,7 +155,7 @@ export class ProjectApiKeysService {
             );
         }
 
-        await this.projectApiKeyRepository.remove(projectApiKey);
+        await this.projectApiKeyRepository.delete(projectApiKey);
 
         return projectApiKey.id;
     }

@@ -14,10 +14,16 @@ import { InvitationActionsController } from './interfaces/rest/invitation-action
 import { OrganizationsService } from './application/services/organization.service';
 import { MemberService } from './application/services/member.service';
 import { InvitationService } from './application/services/invitation.service';
+import { InvitationEventListener } from './application/listeners/invitation.listener';
+import { NotificationsModule } from '../notifications/notifications.module';
+import { OrganizationRepository } from './infrastructure/persistence/repositories/organization.repository';
+import { MemberRepository } from './infrastructure/persistence/repositories/member.repository';
+import { InvitationRepository } from './infrastructure/persistence/repositories/invitation.repository';
 
 @Module({
     imports: [
         SharedModule,
+        NotificationsModule,
         TypeOrmModule.forFeature([Organization, Member, Invitation]),
     ],
     controllers: [
@@ -26,9 +32,15 @@ import { InvitationService } from './application/services/invitation.service';
         InvitationsController,
         InvitationActionsController,
     ],
-    providers: [OrganizationsService, MemberService, InvitationService],
-    exports: [
-        MemberService, // 👈 solo lo que otros necesitan
+    providers: [
+        OrganizationsService,
+        MemberService,
+        InvitationService,
+        InvitationEventListener,
+        OrganizationRepository,
+        MemberRepository,
+        InvitationRepository,
     ],
+    exports: [MemberService],
 })
 export class OrganizationsModule {}
