@@ -30,6 +30,7 @@ import { HealthController } from './shared/interfaces/rest/health.controller';
 import { Project } from './projects/domain/model/project.entity';
 import { ProjectApiKey } from './projects/domain/model/project-api-key.entity';
 import { Notification } from './notifications/domain/model/notification.entity';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -56,6 +57,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
         ProjectsModule,
         NotificationsModule,
         SharedModule,
+        EventEmitterModule.forRoot(),
         ConfigModule.forRoot({
             isGlobal: true,
         }),

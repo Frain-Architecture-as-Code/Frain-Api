@@ -1,7 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Project } from '../../domain/model/project.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectNotFoundException } from '../../domain/exceptions/project-not-found.exceptions';
 import { GetProjectsByOrganizationIdQuery } from '../../domain/model/queries/get-projects-by-organization-id.query';
 import { GetProjectByIdQuery } from '../../domain/model/queries/get-project-by-id.query';
@@ -14,14 +12,14 @@ import { OrganizationId } from '../../domain/model/valueobjects/organization-id'
 import { UpdateProjectCommand } from '../../domain/model/commands/update-project.command';
 import { SetC4ModelCommand } from '../../domain/model/commands/set-c4-model.command';
 import { UpdateNodePositionCommand } from '../../domain/model/commands/update-node-position.command';
+import { ProjectRepository } from '../../infrastructure/persistence/repositories/project.repository';
 
 @Injectable()
 export class ProjectsService {
     private readonly logger = new Logger(ProjectsService.name);
 
     constructor(
-        @InjectRepository(Project)
-        private projectRepository: Repository<Project>,
+        private projectRepository: ProjectRepository,
         private organizationContextAcl: OrganizationContextAcl,
     ) {}
 
@@ -47,17 +45,7 @@ export class ProjectsService {
         // TODO: we can add additional validation here
         await this.canUserAccessProject(query.user.id, query.organizationId);
 
-        const project = await this.projectRepository.findOne({
-            where: {
-                id: query.projectId,
-            },
-        });
-
-        if (project === null) {
-            throw new ProjectNotFoundException(query.projectId);
-        }
-
-        return project;
+        return this.projectRepository.findById(query.projectId);
     }
 
     async getProjectsByOrganizationId(
@@ -65,11 +53,9 @@ export class ProjectsService {
     ): Promise<Project[]> {
         await this.canUserAccessProject(query.user.id, query.organizationId);
 
-        const projects = await this.projectRepository.find({
-            where: {
-                organizationId: query.organizationId,
-            },
-        });
+        const projects = await this.projectRepository.findAllByOrganizationId(
+            query.organizationId,
+        );
 
         return projects;
     }
@@ -102,7 +88,7 @@ export class ProjectsService {
 
     async updateProject(command: UpdateProjectCommand): Promise<ProjectId> {
         const hasAccessToOrganization =
-            await this.organizationContextAcl.canCreateProject(
+            await this.organizationContextAcl.canUpdateProject(
                 command.user.id.toString(),
                 command.organizationId.toString(),
             );
@@ -113,12 +99,9 @@ export class ProjectsService {
             );
         }
 
-        const project = await this.projectRepository.findOne({
-            where: {
-                id: command.projectId,
-                organizationId: command.organizationId,
-            },
-        });
+        const project = await this.projectRepository.findById(
+            command.projectId,
+        );
 
         if (!project) {
             throw new ProjectNotFoundException(command.projectId);
@@ -138,9 +121,7 @@ export class ProjectsService {
      * Used by C4 model endpoints that authenticate via API Key.
      */
     async getProjectByIdRaw(projectId: ProjectId): Promise<Project> {
-        const project = await this.projectRepository.findOne({
-            where: { id: projectId },
-        });
+        const project = await this.projectRepository.findById(projectId);
 
         if (project === null) {
             throw new ProjectNotFoundException(projectId);
@@ -154,9 +135,9 @@ export class ProjectsService {
      * Used by the SDK endpoint.
      */
     async setC4Model(command: SetC4ModelCommand): Promise<ProjectId> {
-        const project = await this.projectRepository.findOne({
-            where: { id: command.projectId },
-        });
+        const project = await this.projectRepository.findById(
+            command.projectId,
+        );
 
         if (!project) {
             throw new ProjectNotFoundException(command.projectId);
@@ -178,9 +159,9 @@ export class ProjectsService {
     async updateNodePosition(
         command: UpdateNodePositionCommand,
     ): Promise<void> {
-        const project = await this.projectRepository.findOne({
-            where: { id: command.projectId },
-        });
+        const project = await this.projectRepository.findById(
+            command.projectId,
+        );
 
         if (!project) {
             throw new ProjectNotFoundException(command.projectId);
