@@ -1,9 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateOrganizationCommand } from '../../domain/model/commands/create-organization.command';
 import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Organization } from '../../domain/model/organization.entity';
-import { Repository } from 'typeorm';
 import { MemberId } from '../../domain/model/valueobjects/member-id';
 import { GetOrganizationByIdQuery } from '../../domain/model/queries/get-organization-by-id.query';
 import { Member } from '../../domain/model/member.entity';
@@ -16,6 +14,7 @@ import { OrganizationNotFoundException } from '../../domain/exceptions/organizat
 import { MemberRole } from '../../domain/model/valueobjects/member-role';
 import { OrganizationRepository } from '../../infrastructure/persistence/organization.repository';
 import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
+import { MemberRepository } from '../../infrastructure/persistence/member.repository';
 
 @Injectable()
 export class OrganizationsService {
@@ -23,10 +22,7 @@ export class OrganizationsService {
 
     constructor(
         private organizationRepository: OrganizationRepository,
-
-        @InjectRepository(Member)
-        private memberRepository: Repository<Member>,
-
+        private memberRepository: MemberRepository,
         private memberService: MemberService,
     ) {}
 

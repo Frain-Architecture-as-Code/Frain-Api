@@ -1,13 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Member } from '../../domain/model/member.entity';
 import { GetMemberByUserIdAndOrganizationIdQuery } from '../../domain/model/queries/get-member-by-user-id-and-organization-id.query';
-import { UserIsNotMemberOfOrganizationException } from '../../domain/exceptions/user-is-not-member-of-organization.exception';
 import { GetOrganizationMembersQuery } from '../../domain/model/queries/get-organization-members.query';
 import { UpdateMemberCommand } from '../../domain/model/commands/update-member.command';
 import { GetMemberByIdQuery } from '../../domain/model/queries/get-member-by-id.query';
-import { MemberNotFoundException } from '../../domain/exceptions/member-not-found.exception';
 import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { InvalidUpdateMemberRequestException } from '../../domain/exceptions/invalid-update-member-request.exception';
 import { EnrollMemberToOrganizationCommand } from '../../domain/model/commands/enroll-member-to-organization.command';
@@ -16,59 +12,32 @@ import { MemberName } from '../../domain/model/valueobjects/member-name';
 import { ExistsUserInOrganizationQuery } from '../../domain/model/queries/exists-user-in-organization.query';
 import { MemberAlreadyExistsException } from '../../domain/exceptions/member-already-exists.exception';
 import { ExistsMemberInOrganizationQuery } from '../../domain/model/queries/exists-member-in-organization.query';
+import { MemberRepository } from '../../infrastructure/persistence/member.repository';
 
 @Injectable()
 export class MemberService {
-    constructor(
-        @InjectRepository(Member)
-        private memberRepository: Repository<Member>,
-    ) {}
+    constructor(private memberRepository: MemberRepository) {}
 
     async getMemberByUserIdAndOrganizationId(
         query: GetMemberByUserIdAndOrganizationIdQuery,
     ): Promise<Member> {
-        const member = await this.memberRepository.findOne({
-            where: {
-                userId: query.userId,
-                organizationId: query.organizationId,
-            },
-        });
-
-        if (member === null) {
-            throw new UserIsNotMemberOfOrganizationException(
-                query.userId,
-                query.organizationId,
-            );
-        }
-
-        return member;
+        return await this.memberRepository.findByUserIdAndOrganizationId(
+            query.userId,
+            query.organizationId,
+        );
     }
 
     async existsUserInOrganization(
         query: ExistsUserInOrganizationQuery,
     ): Promise<boolean> {
-        const member = await this.memberRepository.findOne({
-            where: {
-                userId: query.userId,
-                organizationId: query.organizationId,
-            },
-        });
-
-        return member !== null;
+        return await this.memberRepository.existsMemberByUserIdAndOrganizationId(
+            query.userId,
+            query.organizationId,
+        );
     }
 
     async getMemberById(query: GetMemberByIdQuery): Promise<Member> {
-        const member = await this.memberRepository.findOne({
-            where: {
-                id: query.memberId,
-            },
-        });
-
-        if (member === null) {
-            throw new MemberNotFoundException(query.memberId);
-        }
-
-        return member;
+        return await this.memberRepository.getMemberById(query.memberId);
     }
 
     async getOrganizationMembers(
@@ -80,11 +49,9 @@ export class MemberService {
             userId: query.userId,
         });
 
-        const members = await this.memberRepository.find({
-            where: {
-                organizationId: query.organizationId,
-            },
-        });
+        const members = await this.memberRepository.getMembersByOrganizationId(
+            query.organizationId,
+        );
 
         return members;
     }
@@ -109,12 +76,10 @@ export class MemberService {
 
         if (command.newMemberName) {
             const existsAlreadyAMemberWithNewName =
-                await this.memberRepository.findOne({
-                    where: {
-                        organizationId: command.organizationId,
-                        name: command.newMemberName,
-                    },
-                });
+                await this.memberRepository.existsMemberByMemberName(
+                    command.organizationId,
+                    command.newMemberName,
+                );
 
             if (existsAlreadyAMemberWithNewName) {
                 throw new InvalidUpdateMemberRequestException(
@@ -173,12 +138,9 @@ export class MemberService {
     async existsMemberInOrganization(
         query: ExistsMemberInOrganizationQuery,
     ): Promise<boolean> {
-        const member = await this.memberRepository.exists({
-            where: {
-                id: query.memberId,
-                organizationId: query.organizationId,
-            },
-        });
-        return member;
+        return await this.memberRepository.existsMemberByOrganizationIdAndMemberId(
+            query.memberId,
+            query.organizationId,
+        );
     }
 }

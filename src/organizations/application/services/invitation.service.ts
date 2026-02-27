@@ -13,8 +13,8 @@ import { ExistsInvitationQuery } from '../../domain/model/queries/exists-invitat
 import { DeclineInvitationCommand } from '../../domain/model/commands/decline-invitation.command';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InvitationSentEvent } from '../../domain/events/invitation-sent.event';
-import { Organization } from '../../domain/model/organization.entity';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
+import { OrganizationRepository } from '../../infrastructure/persistence/organization.repository';
 
 @Injectable()
 export class InvitationService {
@@ -23,8 +23,7 @@ export class InvitationService {
     constructor(
         @InjectRepository(Invitation)
         private invitationRepository: Repository<Invitation>,
-        @InjectRepository(Organization)
-        private organizationRepository: Repository<Organization>,
+        private organizationRepository: OrganizationRepository,
         private memberService: MemberService,
         private eventEmitter: EventEmitter2,
     ) {}
@@ -75,11 +74,10 @@ export class InvitationService {
             organizationId: command.organizationId,
         });
 
-        const organization = await this.organizationRepository.findOne({
-            where: {
-                id: command.organizationId,
-            },
-        });
+        const organization =
+            await this.organizationRepository.getOrganizationById(
+                command.organizationId,
+            );
 
         if (!organization) {
             throw new OrganizationNotFoundException(command.organizationId);
