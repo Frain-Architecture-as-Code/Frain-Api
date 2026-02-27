@@ -16,6 +16,7 @@ import { MemberService } from './application/services/member.service';
 import { InvitationService } from './application/services/invitation.service';
 import { InvitationEventListener } from './application/listeners/invitation.listener';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { OrganizationRepository } from './infrastructure/persistence/organization.repository';
 
 @Module({
     imports: [
@@ -34,6 +35,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
         MemberService,
         InvitationService,
         InvitationEventListener,
+        OrganizationRepository,
     ],
     exports: [MemberService],
 })
