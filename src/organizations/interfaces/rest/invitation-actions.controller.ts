@@ -1,12 +1,14 @@
-import { Controller, Param, Patch } from '@nestjs/common';
+import { Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserContext } from '../../../shared/infrastructure/security/user-context';
 import { InvitationCommandAssembler } from './assemblers/invitation-command.assembler';
 import { InvitationService } from '../../application/services/invitation.service';
 import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
+import { AuthGuard } from '../../../shared/infrastructure/security/auth.guard';
 
 @Controller('/api/v1/invitations/:invitationId')
 @ApiTags('Invitations')
+@UseGuards(AuthGuard)
 export class InvitationActionsController {
     constructor(
         private userContext: UserContext,

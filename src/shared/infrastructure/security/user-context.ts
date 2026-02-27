@@ -22,6 +22,8 @@ export class UserContext {
     get user(): User {
         const payload = this.request['user'] as JwtPayload;
 
+        console.log('User JWT Payload', payload);
+
         const userId = UserId.fromString(payload.sub);
         const userEmail = EmailAddress.fromString(payload.email);
         const username = UserName.fromString(payload.username);
