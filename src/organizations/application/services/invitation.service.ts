@@ -1,31 +1,28 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Invitation } from '../../domain/model/invitation.entity';
-import { Repository } from 'typeorm';
 import { getInvitationsByOrganizationIdQuery } from '../../domain/model/queries/get-invitations-by-organization-id.query';
 import { SendInvitationCommand } from '../../domain/model/commands/send-invitation.command';
 import { InsufficientPermissionException } from '../../../shared/domain/exceptions/insufficient-permission.exception';
 import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
 import { MemberService } from './member.service';
 import { AcceptInvitationCommand } from '../../domain/model/commands/accept-invitation.command';
-import { InvitationNotFoundException } from '../../domain/exceptions/invitation-not-found.exception';
 import { ExistsInvitationQuery } from '../../domain/model/queries/exists-invitation.query';
 import { DeclineInvitationCommand } from '../../domain/model/commands/decline-invitation.command';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InvitationSentEvent } from '../../domain/events/invitation-sent.event';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
 import { OrganizationRepository } from '../../infrastructure/persistence/organization.repository';
+import { InvitationRepository } from '../../infrastructure/persistence/invitation.repository';
 
 @Injectable()
 export class InvitationService {
     private logger = new Logger(InvitationService.name);
 
     constructor(
-        @InjectRepository(Invitation)
-        private invitationRepository: Repository<Invitation>,
-        private organizationRepository: OrganizationRepository,
-        private memberService: MemberService,
-        private eventEmitter: EventEmitter2,
+        private readonly invitationRepository: InvitationRepository,
+        private readonly organizationRepository: OrganizationRepository,
+        private readonly memberService: MemberService,
+        private readonly eventEmitter: EventEmitter2,
     ) {}
 
     async getInvitationsByOrganizationId(
@@ -44,9 +41,11 @@ export class InvitationService {
             );
         }
 
-        const invitations = await this.invitationRepository.find({
-            where: { organizationId: query.organizationId },
-        });
+        const invitations =
+            await this.invitationRepository.findAllByOrganizationId(
+                query.organizationId,
+            );
+
         return invitations;
     }
 
@@ -100,16 +99,10 @@ export class InvitationService {
         return invitation;
     }
 
-    async existsInvitation(query: ExistsInvitationQuery): Promise<Invitation> {
-        const invitation = await this.invitationRepository.findOne({
-            where: {
-                id: query.invitationId,
-            },
-        });
-
-        if (!invitation) {
-            throw new InvitationNotFoundException(query.invitationId);
-        }
+    async getInvitationById(query: ExistsInvitationQuery): Promise<Invitation> {
+        const invitation = await this.invitationRepository.findById(
+            query.invitationId,
+        );
 
         return invitation;
     }
@@ -117,7 +110,7 @@ export class InvitationService {
     async acceptInvitation(
         command: AcceptInvitationCommand,
     ): Promise<InvitationId> {
-        const currentInvitation = await this.existsInvitation({
+        const currentInvitation = await this.getInvitationById({
             invitationId: command.invitationId,
         });
 
@@ -144,7 +137,7 @@ export class InvitationService {
     async declineInvitation(
         command: DeclineInvitationCommand,
     ): Promise<InvitationId> {
-        const currentInvitation = await this.existsInvitation({
+        const currentInvitation = await this.getInvitationById({
             invitationId: command.invitationId,
         });
 
