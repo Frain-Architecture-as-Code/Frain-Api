@@ -6,11 +6,16 @@ import { NotificationsController } from './interfaces/rest/notifications.control
 import { NotificationsService } from './application/services/notifications.service';
 import { NotificationContextAcl } from './infrastructure/acl/notification-context.acl';
 import { SharedModule } from '../shared/shared.module';
+import { NotificationRepository } from './infrastructure/persistence/repositories/notification.repository';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Notification]), SharedModule],
     controllers: [NotificationsController],
-    providers: [NotificationsService, NotificationContextAcl],
+    providers: [
+        NotificationsService,
+        NotificationContextAcl,
+        NotificationRepository,
+    ],
     exports: [NotificationContextAcl],
 })
 export class NotificationsModule {}

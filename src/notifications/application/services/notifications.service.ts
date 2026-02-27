@@ -1,6 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Notification } from '../../domain/model/notification.entity';
 import { NotificationId } from '../../domain/model/valueobjects/notification-id';
 import { NotificationNotFoundException } from '../../domain/exceptions/notification-not-found.exception';
@@ -10,15 +8,13 @@ import { UpdateNotificationStatusCommand } from '../../domain/model/commands/upd
 import { GetAllUserNotificationsQuery } from '../../domain/model/queries/get-all-user-notifications.query';
 import { GetNotificationByIdQuery } from '../../domain/model/queries/get-notification-by-id.query';
 import { NotificationStatus } from '../../domain/model/valueobjects/notification-status';
+import { NotificationRepository } from '../../infrastructure/persistence/repositories/notification.repository';
 
 @Injectable()
 export class NotificationsService {
     private readonly logger = new Logger(NotificationsService.name);
 
-    constructor(
-        @InjectRepository(Notification)
-        private notificationRepository: Repository<Notification>,
-    ) {}
+    constructor(private notificationRepository: NotificationRepository) {}
 
     async sendNotification(
         command: SendNotificationCommand,
@@ -42,9 +38,9 @@ export class NotificationsService {
     async updateNotificationStatus(
         command: UpdateNotificationStatusCommand,
     ): Promise<NotificationId> {
-        const notification = await this.notificationRepository.findOne({
-            where: { id: command.notificationId },
-        });
+        const notification = await this.notificationRepository.findById(
+            command.notificationId,
+        );
 
         if (!notification) {
             throw new NotificationNotFoundException(command.notificationId);
@@ -76,16 +72,14 @@ export class NotificationsService {
     async getAllUserNotifications(
         query: GetAllUserNotificationsQuery,
     ): Promise<Notification[]> {
-        return this.notificationRepository.find({
-            where: { recipientEmail: query.userEmail },
-        });
+        return this.notificationRepository.findAllByRecipientEmail(
+            query.userEmail,
+        );
     }
 
     async getNotificationById(
         query: GetNotificationByIdQuery,
-    ): Promise<Notification | null> {
-        return this.notificationRepository.findOne({
-            where: { id: query.notificationId },
-        });
+    ): Promise<Notification> {
+        return this.notificationRepository.findById(query.notificationId);
     }
 }
