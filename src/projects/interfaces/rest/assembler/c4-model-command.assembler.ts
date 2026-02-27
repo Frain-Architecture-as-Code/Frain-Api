@@ -5,7 +5,6 @@ import { C4View } from '../../../domain/model/valueobjects/c4-view';
 import { ContainerInfo } from '../../../domain/model/valueobjects/container-info';
 import { SetC4ModelCommand } from '../../../domain/model/commands/set-c4-model.command';
 import { UpdateNodePositionCommand } from '../../../domain/model/commands/update-node-position.command';
-import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
 import { ProjectId } from '../../../domain/model/valueobjects/project-id';
 import { SetC4ModelRequest } from '../requests/set-c4-model.request';
 import { UpdateNodePositionRequest } from '../requests/update-node-position.request';
@@ -71,11 +70,7 @@ export class C4ModelCommandAssembler {
             ),
         );
 
-        return new SetC4ModelCommand(
-            ProjectId.fromString(projectId),
-            OrganizationId.generate(), // Organization ID is not relevant for SDK endpoint
-            c4Model,
-        );
+        return new SetC4ModelCommand(ProjectId.fromString(projectId), c4Model);
     }
 
     static toUpdateNodePositionCommand(
