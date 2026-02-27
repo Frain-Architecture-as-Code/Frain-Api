@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Invitation } from '../../domain/model/invitation.entity';
 import { Repository } from 'typeorm';
@@ -11,13 +11,22 @@ import { AcceptInvitationCommand } from '../../domain/model/commands/accept-invi
 import { InvitationNotFoundException } from '../../domain/exceptions/invitation-not-found.exception';
 import { ExistsInvitationQuery } from '../../domain/model/queries/exists-invitation.query';
 import { DeclineInvitationCommand } from '../../domain/model/commands/decline-invitation.command';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InvitationSentEvent } from '../../domain/events/invitation-sent.event';
+import { Organization } from '../../domain/model/organization.entity';
+import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
 
 @Injectable()
 export class InvitationService {
+    private logger = new Logger(InvitationService.name);
+
     constructor(
         @InjectRepository(Invitation)
         private invitationRepository: Repository<Invitation>,
+        @InjectRepository(Organization)
+        private organizationRepository: Repository<Organization>,
         private memberService: MemberService,
+        private eventEmitter: EventEmitter2,
     ) {}
 
     async getInvitationsByOrganizationId(
@@ -66,8 +75,29 @@ export class InvitationService {
             organizationId: command.organizationId,
         });
 
-        await this.invitationRepository.save(invitation);
-        // TODO: Emit event to send notification
+        const organization = await this.organizationRepository.findOne({
+            where: {
+                id: command.organizationId,
+            },
+        });
+
+        if (!organization) {
+            throw new OrganizationNotFoundException(command.organizationId);
+        }
+
+        const savedInvitation =
+            await this.invitationRepository.save(invitation);
+
+        this.eventEmitter.emit(
+            'invitation.sent',
+            new InvitationSentEvent(
+                savedInvitation,
+                command.user.email,
+                organization.name,
+            ),
+        );
+
+        this.logger.log('Invitation emitted');
 
         return invitation;
     }
