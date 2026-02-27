@@ -38,7 +38,7 @@ export class OrganizationRepository {
                 Member,
                 'm',
                 'm.organizationId = org.id AND m.userId = :userId',
-                { userId: userId },
+                { userId: userId.toString() },
             )
             .getMany();
     }
