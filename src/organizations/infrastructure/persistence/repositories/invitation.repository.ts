@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Invitation } from '../../domain/model/invitation.entity';
+import { Invitation } from '../../../domain/model/invitation.entity';
 import { Repository } from 'typeorm';
-import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
-import { InvitationId } from '../../domain/model/valueobjects/invitation-id';
-import { InvitationNotFoundException } from '../../domain/exceptions/invitation-not-found.exception';
+import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
+import { InvitationId } from '../../../domain/model/valueobjects/invitation-id';
+import { InvitationNotFoundException } from '../../../domain/exceptions/invitation-not-found.exception';
 
 @Injectable()
 export class InvitationRepository {

@@ -12,9 +12,9 @@ import { UpdateOrganizationCommand } from '../../domain/model/commands/update-or
 import { MemberService } from './member.service';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
 import { MemberRole } from '../../domain/model/valueobjects/member-role';
-import { OrganizationRepository } from '../../infrastructure/persistence/organization.repository';
+import { OrganizationRepository } from '../../infrastructure/persistence/repositories/organization.repository';
 import { GetUserOrganizationsQuery } from '../../domain/model/queries/get-user-organizations.query';
-import { MemberRepository } from '../../infrastructure/persistence/member.repository';
+import { MemberRepository } from '../../infrastructure/persistence/repositories/member.repository';
 
 @Injectable()
 export class OrganizationsService {

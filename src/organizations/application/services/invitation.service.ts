@@ -11,8 +11,8 @@ import { DeclineInvitationCommand } from '../../domain/model/commands/decline-in
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InvitationSentEvent } from '../../domain/events/invitation-sent.event';
 import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
-import { OrganizationRepository } from '../../infrastructure/persistence/organization.repository';
-import { InvitationRepository } from '../../infrastructure/persistence/invitation.repository';
+import { OrganizationRepository } from '../../infrastructure/persistence/repositories/organization.repository';
+import { InvitationRepository } from '../../infrastructure/persistence/repositories/invitation.repository';
 
 @Injectable()
 export class InvitationService {

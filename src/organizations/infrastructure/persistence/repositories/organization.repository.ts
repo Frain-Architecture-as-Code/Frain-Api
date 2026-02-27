@@ -1,12 +1,12 @@
 import { Repository } from 'typeorm';
-import { Organization } from '../../domain/model/organization.entity';
-import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
+import { Organization } from '../../../domain/model/organization.entity';
+import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
 import { Injectable } from '@nestjs/common';
-import { OrganizationNotFoundException } from '../../domain/exceptions/organization-not-found.exception';
+import { OrganizationNotFoundException } from '../../../domain/exceptions/organization-not-found.exception';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
-import { Member } from '../../domain/model/member.entity';
-import { Invitation } from '../../domain/model/invitation.entity';
+import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
+import { Member } from '../../../domain/model/member.entity';
+import { Invitation } from '../../../domain/model/invitation.entity';
 
 @Injectable()
 export class OrganizationRepository {

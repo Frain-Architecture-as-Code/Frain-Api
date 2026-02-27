@@ -12,7 +12,7 @@ import { MemberName } from '../../domain/model/valueobjects/member-name';
 import { ExistsUserInOrganizationQuery } from '../../domain/model/queries/exists-user-in-organization.query';
 import { MemberAlreadyExistsException } from '../../domain/exceptions/member-already-exists.exception';
 import { ExistsMemberInOrganizationQuery } from '../../domain/model/queries/exists-member-in-organization.query';
-import { MemberRepository } from '../../infrastructure/persistence/member.repository';
+import { MemberRepository } from '../../infrastructure/persistence/repositories/member.repository';
 
 @Injectable()
 export class MemberService {

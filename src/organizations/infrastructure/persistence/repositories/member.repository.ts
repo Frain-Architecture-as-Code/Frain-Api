@@ -1,13 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Member } from '../../domain/model/member.entity';
+import { Member } from '../../../domain/model/member.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { UserId } from '../../../shared/domain/model/valueobjects/user-id';
-import { OrganizationId } from '../../domain/model/valueobjects/organization-id';
-import { UserIsNotMemberOfOrganizationException } from '../../domain/exceptions/user-is-not-member-of-organization.exception';
-import { MemberId } from '../../domain/model/valueobjects/member-id';
-import { MemberNotFoundException } from '../../domain/exceptions/member-not-found.exception';
-import { MemberName } from '../../domain/model/valueobjects/member-name';
+import { UserId } from '../../../../shared/domain/model/valueobjects/user-id';
+import { OrganizationId } from '../../../domain/model/valueobjects/organization-id';
+import { UserIsNotMemberOfOrganizationException } from '../../../domain/exceptions/user-is-not-member-of-organization.exception';
+import { MemberId } from '../../../domain/model/valueobjects/member-id';
+import { MemberNotFoundException } from '../../../domain/exceptions/member-not-found.exception';
+import { MemberName } from '../../../domain/model/valueobjects/member-name';
 
 @Injectable()
 export class MemberRepository {
