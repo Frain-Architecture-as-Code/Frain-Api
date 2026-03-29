@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { GetApiKeysQuery as GetProjectApiKeysQuery } from '../../domain/model/queries/get-project-api-keys.query';
 import { ProjectApiKey } from '../../domain/model/project-api-key.entity';
 import { OrganizationContextAcl } from '../../../organizations/infrastructure/acl/organization-context.acl';
@@ -82,6 +86,19 @@ export class ProjectApiKeysService {
                 'User does not have sufficient permissions to create a project API key.',
             );
         }
+
+        const existsApiKey =
+            await this.projectApiKeyRepository.findByMemberIdAndProjectId(
+                command.memberId,
+                command.projectId,
+            );
+
+        if (existsApiKey !== null) {
+            throw new ConflictException(
+                'API key already exists for this member and project.',
+            );
+        }
+
         const projectApiKeyId = ProjectApiKeyId.generate();
 
         const apiKey = ProjectApiKey.create({
@@ -155,8 +172,10 @@ export class ProjectApiKeysService {
             );
         }
 
+        // This line is important because after deleting the projectApiKey, projectApiKey.id is no longer valid and it is undefined
+        const apiKeyId = projectApiKey.id;
         await this.projectApiKeyRepository.delete(projectApiKey);
 
-        return projectApiKey.id;
+        return apiKeyId;
     }
 }

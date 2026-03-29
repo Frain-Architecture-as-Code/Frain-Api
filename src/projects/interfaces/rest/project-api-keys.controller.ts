@@ -93,6 +93,9 @@ export class ProjectApiKeysController {
         const result =
             await this.projectApiKeysService.revokeProjectApiKey(command);
 
+        console.log('Revoked api key', result);
+
+        // TODO: FIX Response
         const response =
             ProjectApiKeyResponseAssembler.toRevokeProjectApiKeyResponse(
                 result,

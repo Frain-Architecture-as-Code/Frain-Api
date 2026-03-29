@@ -67,8 +67,8 @@ export class Project extends AuditableEntity {
      * Updates the entire C4Model.
      * Used when the SDK sends a complete new model.
      */
-    public updateC4Model(c4Model: C4Model): void {
-        this.c4Model = c4Model;
+    public updateC4Model(incomingModel: C4Model): void {
+        this.c4Model = incomingModel;
     }
 
     /**
