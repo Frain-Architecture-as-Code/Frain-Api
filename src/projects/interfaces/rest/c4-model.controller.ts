@@ -21,6 +21,7 @@ import { C4ModelResponse } from './responses/c4-model.response';
 import { ProjectDetailsResponse } from './responses/project-details.response';
 import { ViewDetailResponse } from './responses/view-detail.response';
 import { ViewSummaryResponse } from './responses/view-summary.response';
+import { C4ModelGuard } from '../../infrastructure/security/c4-model.guard';
 
 @ApiTags('C4 Model')
 @Controller('/api/v1/c4models/projects/:projectId')
@@ -55,7 +56,7 @@ export class C4ModelController {
      * Gets the full C4 model for a project.
      */
     @Get()
-    @UseGuards(AuthGuard)
+    @UseGuards(C4ModelGuard)
     async getC4Model(
         @Param('projectId') projectId: string,
     ): Promise<C4ModelResponse> {
