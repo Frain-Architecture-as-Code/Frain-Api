@@ -10,6 +10,7 @@ import { ContainerInfo } from './valueobjects/container-info';
 import { ViewType } from './valueobjects/view-type';
 import { createC4ModelTransformer } from '../../infrastructure/persistence/transformers';
 import { AuditableEntity } from '../../../shared/domain/model/auditable-entity';
+import { C4Relation } from './valueobjects/c4-relation';
 
 export interface ViewSummary {
     id: string;
@@ -67,8 +68,106 @@ export class Project extends AuditableEntity {
      * Updates the entire C4Model.
      * Used when the SDK sends a complete new model.
      */
-    public updateC4Model(c4Model: C4Model): void {
-        this.c4Model = c4Model;
+    public updateC4Model(incomingModel: C4Model): void {
+        // 1. Si el proyecto es nuevo y no tiene modelo previo, aceptamos el payload tal cual
+        if (this.c4Model === null) {
+            this.c4Model = incomingModel;
+            return;
+        }
+
+        // 2. Si ya existe un modelo en la Base de Datos, hacemos el MERGE para salvar los IDs
+        const updatedViews = incomingModel.views.map((incomingView) => {
+            // Buscar la vista vieja
+            const existingView = this.c4Model!.views.find(
+                (v) =>
+                    v.name === incomingView.name &&
+                    v.type === incomingView.type,
+            );
+
+            const viewId = existingView ? existingView.id : incomingView.id;
+            const nodeIdTranslationMap = new Map<string, string>();
+
+            const processNodes = (
+                incomingNodes: C4Node[],
+                existingNodes: C4Node[] = [],
+            ): C4Node[] => {
+                return incomingNodes.map((incomingNode) => {
+                    const existingNode = existingNodes.find(
+                        (n) =>
+                            n.name === incomingNode.name &&
+                            n.type === incomingNode.type,
+                    );
+
+                    let nodeId = incomingNode.id;
+
+                    const finalX = incomingNode.x ?? existingNode?.x ?? 0;
+                    const finalY = incomingNode.y ?? existingNode?.y ?? 0;
+
+                    if (existingNode) {
+                        nodeId = existingNode.id;
+                    }
+
+                    // Mapa de traducción para arreglar las relaciones
+                    nodeIdTranslationMap.set(incomingNode.id, nodeId);
+
+                    return new C4Node(
+                        nodeId, // ID viejo rescatado de la BD o el nuevo
+                        incomingNode.type,
+                        incomingNode.name,
+                        incomingNode.description,
+                        incomingNode.technology,
+                        viewId,
+                        finalX, // Se guardan las nuevas coordenadas X
+                        finalY, // Se guardan las nuevas coordenadas Y
+                    );
+                });
+            };
+
+            const updatedNodes = processNodes(
+                incomingView.nodes,
+                existingView?.nodes,
+            );
+            const updatedExternalNodes = processNodes(
+                incomingView.externalNodes,
+                existingView?.externalNodes,
+            );
+
+            const updatedRelations = incomingView.relations.map(
+                (incomingRel) => {
+                    const resolvedSourceId =
+                        nodeIdTranslationMap.get(incomingRel.sourceId) ||
+                        incomingRel.sourceId;
+                    const resolvedTargetId =
+                        nodeIdTranslationMap.get(incomingRel.targetId) ||
+                        incomingRel.targetId;
+
+                    return new C4Relation(
+                        resolvedSourceId,
+                        resolvedTargetId,
+                        incomingRel.description,
+                        incomingRel.technology,
+                    );
+                },
+            );
+
+            return new C4View(
+                viewId,
+                incomingView.type,
+                incomingView.container,
+                incomingView.name,
+                updatedNodes,
+                updatedExternalNodes,
+                updatedRelations,
+            );
+        });
+
+        // 3. Reemplazamos el modelo del proyecto con el modelo fusionado
+        this.c4Model = new C4Model(
+            incomingModel.title,
+            incomingModel.description,
+            incomingModel.updatedAt,
+            updatedViews,
+        );
     }
 
     /**
