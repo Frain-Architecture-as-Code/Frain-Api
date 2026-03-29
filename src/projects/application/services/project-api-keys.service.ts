@@ -155,8 +155,10 @@ export class ProjectApiKeysService {
             );
         }
 
+        // This line is important because after deleting the projectApiKey, projectApiKey.id is no longer valid and it is undefined
+        const apiKeyId = projectApiKey.id;
         await this.projectApiKeyRepository.delete(projectApiKey);
 
-        return projectApiKey.id;
+        return apiKeyId;
     }
 }
