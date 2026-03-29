@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { ProjectApiKeyId } from '../../../domain/model/valueobjects/project-api-key-id';
 import { ProjectApiKeyNotFoundException } from '../../../domain/exceptions/project-api-key-not-found.exception';
 import { ProjectId } from '../../../domain/model/valueobjects/project-id';
+import { MemberId } from '../../../domain/model/valueobjects/member-id';
 
 @Injectable()
 export class ProjectApiKeyRepository {
@@ -28,6 +29,18 @@ export class ProjectApiKeyRepository {
     async findAllByProjectId(projectId: ProjectId): Promise<ProjectApiKey[]> {
         return this.projectApiKeyRepository.find({
             where: {
+                projectId,
+            },
+        });
+    }
+
+    async findByMemberIdAndProjectId(
+        memberId: MemberId,
+        projectId: ProjectId,
+    ): Promise<ProjectApiKey | null> {
+        return this.projectApiKeyRepository.findOne({
+            where: {
+                memberId,
                 projectId,
             },
         });
